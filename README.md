@@ -1,6 +1,6 @@
-### The Easy IMU (eimu) Setup Application
+## The Easy IMU (eimu) Setup Application
 #
-this is the source code of the Easy IMU GUI application. The application requires that you have the **`MPU9250 EIMU Module`** (i.e the **Easy IMU Module**) and is connected to your PC via USB serial communication. 
+this is the source code of the Easy IMU GUI application. The application requires that you have the **`Easy IMU Module`** (i.e **`MPU9250 EIMU MODULE`**) and is connected to your PC via USB serial communication. 
 
 > [!NOTE]  
 > Without the module, only the start page can be viewed.
@@ -32,6 +32,9 @@ this is the source code of the Easy IMU GUI application. The application require
 
 #### Run App First Time [ linux or mac ]
 - Download (by clicking on the green Code button above) or clone the repo into your PC using **`git clone`**
+  > you can use this command if you want to clone the repo:
+  >
+	>  ```git clone https://github.com/samuko-things-company/eimu_setup_application.git```
 
 - change directory into the root **`eimu_setup_application`** folder
 
@@ -80,6 +83,9 @@ this is the source code of the Easy IMU GUI application. The application require
 
 #### Run App First Time [ Windows ]
 - Download (by clicking on the green Code button above) or clone the repo into your PC using **`git clone`**
+  > you can use this command if you want to clone the repo:
+  >
+	>  ```git clone https://github.com/samuko-things-company/eimu_setup_application.git```
 
 - change directory into the root **`eimu_setup_application`** folder
 
