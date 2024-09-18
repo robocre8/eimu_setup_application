@@ -1,13 +1,21 @@
-# Easy IMU (eimu) Setup Application
+### The Easy IMU (eimu) Setup Application
+#
 this is the source code of the Easy IMU GUI application. The application requires that you have the **`MPU9250 EIMU Module`** (i.e the **Easy IMU Module**) and is connected to your PC via USB serial communication. 
 
->> **NOTE**: Without the module, only the start page can be viewed.
+> [!NOTE]  
+> Without the module, only the start page can be viewed.
 
-## Running the GUI app (Using python virtual environment)
-### Prequisite
+#
+
+### Running the GUI app (Using python virtual environment)
+
+#
+
+#### Prequisite
 - This would run on linux (ubuntu), windows, and MAC
 
-- For Windows and Mac Users, ensure that you have the **`CH340 serial converter`** or the **`FTDI`** driver installed. (depending on the module you are using)
+> [!NOTE]  
+> For Windows and Mac Users, ensure you have the **`CH340 serial converter`** or the **`FTDI`** driver installed. (depending on the module you are using)
 
 - Ensure you have `python3` installed on your PC and also `pip`
 
@@ -20,14 +28,15 @@ this is the source code of the Easy IMU GUI application. The application require
   ```
 - Ensure you have the **`Easy IMU Module`** connected to the PC.
 
+#
 
-### Run App First Time [ linux or mac ]
+#### Run App First Time [ linux or mac ]
 - Download (by clicking on the green Code button above) or clone the repo into your PC using **`git clone`**
 
 - change directory into the root **`eimu_setup_application`** folder
 
 - create a python virtual environment named **`.env`** in the root folder 
-	```shell
+  ```shell
     python3 -m venv .env
   ```
 - activate the virtual environment
@@ -49,7 +58,7 @@ this is the source code of the Easy IMU GUI application. The application require
     deactivate
   ```
 
-### Run App [ linux or mac ]
+#### Run App [ linux or mac ]
 - change directory into the root **`eimu_setup_application`** folder
 
 - activate the virtual environment
@@ -67,7 +76,9 @@ this is the source code of the Easy IMU GUI application. The application require
     deactivate
   ```
 
-### Run App First Time [ Windows ]
+#
+
+#### Run App First Time [ Windows ]
 - Download (by clicking on the green Code button above) or clone the repo into your PC using **`git clone`**
 
 - change directory into the root **`eimu_setup_application`** folder
@@ -96,7 +107,7 @@ this is the source code of the Easy IMU GUI application. The application require
     deactivate
   ```
 
-### Run App [ Windows ]
+#### Run App [ Windows ]
 - change directory into the root folder **`eimu_setup_application`**
 
 - activate the virtual environment
@@ -114,3 +125,4 @@ this is the source code of the Easy IMU GUI application. The application require
   ```shell
     deactivate
   ```
+#
