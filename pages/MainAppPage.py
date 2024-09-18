@@ -47,20 +47,20 @@ class MainAppFrame(tb.Frame):
     self.button4 = tb.Button(self.sideNavFrame, text="CALIBRATE GYR", style=buttonStyleName,
                              command= lambda: self.displayPage(self.button4, self.displayCalibrateGyroPage))
     
-    self.button5 = tb.Button(self.sideNavFrame, text="CALIBRATE ACC", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button5, self.displayCalibrateAccPage))
+    self.button5 = tb.Button(self.sideNavFrame, text="GYR VARIANCE", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button5, self.displayComputeGyroVariancePage))
     
-    self.button6 = tb.Button(self.sideNavFrame, text="VIZUALIZE GAIN", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button6, self.displayGainSetupVizPage))
+    self.button6 = tb.Button(self.sideNavFrame, text="CALIBRATE ACC", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button6, self.displayCalibrateAccPage))
     
-    self.button7 = tb.Button(self.sideNavFrame, text="RPY VARIANCE", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button7, self.displayComputeAngleVariancePage))
+    self.button7 = tb.Button(self.sideNavFrame, text="ACC VARIANCE", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button7, self.displayComputeAccVariancePage))
     
-    self.button8 = tb.Button(self.sideNavFrame, text="GYR VARIANCE", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button8, self.displayComputeGyroVariancePage))
+    self.button8 = tb.Button(self.sideNavFrame, text="VIZUALIZE RPY", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button8, self.displayGainSetupVizPage))
     
-    self.button9 = tb.Button(self.sideNavFrame, text="ACC VARIANCE", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button9, self.displayComputeAccVariancePage))
+    self.button9 = tb.Button(self.sideNavFrame, text="RPY VARIANCE", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button9, self.displayComputeAngleVariancePage))
     
     self.button10 = tb.Button(self.sideNavFrame, text="I2C SETUP", style=buttonStyleName,
                              command= lambda: self.displayPage(self.button10, self.displayI2CSetupPage))
