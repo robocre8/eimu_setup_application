@@ -1,0 +1,8 @@
+pyserial
+typeguard
+ttkbootstrap
+numpy
+matplotlib
+scipy
+termcolor
+vpython
