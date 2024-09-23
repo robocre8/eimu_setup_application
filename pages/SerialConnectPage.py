@@ -91,8 +91,8 @@ class SerialConnectFrame(tb.Frame):
     serIsConnected = self.connectToPort(port)
     if serIsConnected:
       # print("connection successful")
-      Messagebox.show_info(f"SUCCESS:\n\nSIC_MPU9250 module found on port: {port}\n\nclick OK to continue", "SUCCESS")
+      Messagebox.show_info(f"SUCCESS:\n\nMPU9250 EIMU Module found on port: {port}\n\nclick OK to continue", "SUCCESS")
       self.next_func()
     else:
       # print("Error connecting to driver")
-      Messagebox.show_error(f"ERROR:\n\nno SIC_MPU9250 module module found on port: {port}\n\ntry again or try another port", "ERROR")
+      Messagebox.show_error(f"ERROR:\n\nno MPU9250 EIMU Module found on port: {port}\n\ntry again or try another port", "ERROR")

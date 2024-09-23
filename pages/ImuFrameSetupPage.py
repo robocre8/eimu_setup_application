@@ -39,7 +39,7 @@ class ImuRefSetupFrame(tb.Frame):
         elif frame_val_str == g.frameList[1]:
           isSuccessful = g.serClient.send("/frame-id", 1)
         
-        if frame_val_str == g.frameList[2]:
+        elif frame_val_str == g.frameList[2]:
           isSuccessful = g.serClient.send("/frame-id", 2)
 
     except:

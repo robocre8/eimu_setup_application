@@ -56,6 +56,26 @@ class VisualizeImuFrame(tb.Frame):
 
 
   def start_imu_viz(self):
+    # if self.xArrow:
+    #   self.xArrow.visible = False
+    #   self.xArrow.delete()
+
+    # if self.yArrow:
+    #   self.yArrow.visible = False
+    #   self.yArrow.delete()
+
+    # if self.zArrow:
+    #   self.zArrow.visible = False
+    #   self.zArrow.delete()
+
+    # if self.myBox:
+    #   self.myBox.visible = False
+    #   self.myBox.delete()
+
+    # if self.myObj:
+    #   self.myObj.visible = False
+    #   self.myObj.delete()
+
     ##----------------------------------------------------------------##
     scene.range=5
     scene.forward=vector(-1,-1,-1)
@@ -68,7 +88,7 @@ class VisualizeImuFrame(tb.Frame):
                   axis=vector(1,0,0), opacity=1.0) # (y,z,x)
     self.zAxis = arrow(length=1.25, shaftwidth=.08, color=color.blue,
                   axis=vector(0,1,0), opacity=1.0) # (y,z,x)
-    
+
     self.xArrow = arrow(length=3, shaftwidth=.1, color=color.red,
                     axis=vector(0,0,1), opacity=.3) # (y,z,x)
     self.yArrow = arrow(length=3, shaftwidth=.1, color=color.green,

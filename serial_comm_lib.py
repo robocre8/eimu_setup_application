@@ -15,9 +15,9 @@ class SerialComm:
         self.ser.write(msg_to_send.encode())   # send a single or multiple byte    
         data = self.ser.readline().decode().strip()
         if time.time()-prev_time > 2.0:
-          raise Exception("Error getting response from arduino nano, wasted much time \n")
+          raise Exception("Error getting response from the microcontroller, wasted much time \n")
       except:
-        raise Exception("Error getting response from arduino nano, wasted much time \n")
+        raise Exception("Error getting response from the microcontroller, wasted much time \n")
     return data
 
   
