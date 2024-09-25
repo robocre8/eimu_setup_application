@@ -5,4 +5,4 @@ numpy
 matplotlib
 scipy
 termcolor
-vpython
+vpython=7.6.3

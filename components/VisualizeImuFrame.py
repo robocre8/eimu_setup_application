@@ -16,6 +16,7 @@ class VisualizeImuFrame(tb.Frame):
     super().__init__(master=parentFrame)
 
     ##############################
+    self.scene=None
     self.xAxis=None
     self.yAxis=None
     self.zAxis=None
@@ -41,7 +42,7 @@ class VisualizeImuFrame(tb.Frame):
     self.button1.pack(side='left', fill='both', padx=10, pady=30)
 
     #create widgets to be added to the canvasFame
-    self.canvas = tb.Canvas(self.canvasFrame, width=20, height=10,autostyle=False ,bg="#FFFFFF", relief='flat')
+    self.canvas = tb.Canvas(self.canvasFrame, width=300, height=10, autostyle=False ,bg="#FFFFFF", relief='solid')
 
     #add created widgets to canvasFame
     self.canvas.pack(side='left', expand=True, fill='both')
@@ -57,10 +58,11 @@ class VisualizeImuFrame(tb.Frame):
 
   def start_imu_viz(self):
     ##----------------------------------------------------------------##
-    scene.range=5
-    scene.forward=vector(-1,-1,-1)
-    scene.width=500
-    scene.height=500
+    
+    self.scene.range=5
+    self.scene.forward=vector(-1,-1,-1)
+    self.scene.width=500
+    self.scene.height=500
 
     self.xAxis = arrow(length=1.25, shaftwidth=.08, color=color.red,
                   axis=vector(0,0,1), opacity=1.0) # (y,z,x)
@@ -68,7 +70,7 @@ class VisualizeImuFrame(tb.Frame):
                   axis=vector(1,0,0), opacity=1.0) # (y,z,x)
     self.zAxis = arrow(length=1.25, shaftwidth=.08, color=color.blue,
                   axis=vector(0,1,0), opacity=1.0) # (y,z,x)
-    
+
     self.xArrow = arrow(length=3, shaftwidth=.1, color=color.red,
                     axis=vector(0,0,1), opacity=.3) # (y,z,x)
     self.yArrow = arrow(length=3, shaftwidth=.1, color=color.green,
@@ -124,5 +126,4 @@ class VisualizeImuFrame(tb.Frame):
 
       self.canvas.after(10, self.vizualize_imu)
     except:
-      scene.delete()
-      exit()
+      self.scene.delete()
