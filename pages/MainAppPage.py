@@ -32,32 +32,33 @@ class MainAppFrame(tb.Frame):
     buttonStyleName = 'primary.Link.TButton'
     buttonStyle.configure(buttonStyleName, font=('Monospace',12, 'bold'))
 
-    self.button1 = tb.Button(self.sideNavFrame, text="RESET PARAMS", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button1, self.displayResetPage))
     
-    self.button2 = tb.Button(self.sideNavFrame, text="CALIBRATE MAG", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button2, self.displayCalibrateMagPage))
+    self.button1 = tb.Button(self.sideNavFrame, text="CALIBRATE MAG", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button1, self.displayCalibrateMagPage))
     
-    self.button3 = tb.Button(self.sideNavFrame, text="CALIBRATE GYR", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button3, self.displayCalibrateGyroPage))
+    self.button2 = tb.Button(self.sideNavFrame, text="CALIBRATE GYR", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button2, self.displayCalibrateGyroPage))
     
-    self.button4 = tb.Button(self.sideNavFrame, text="CALIBRATE ACC", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button4, self.displayCalibrateAccPage))
+    self.button3 = tb.Button(self.sideNavFrame, text="CALIBRATE ACC", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button3, self.displayCalibrateAccPage))
     
-    self.button5 = tb.Button(self.sideNavFrame, text="VIZUALIZE RPY", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button5, self.displayGainSetupVizPage))
+    self.button4 = tb.Button(self.sideNavFrame, text="VIZUALIZE RPY", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button4, self.displayGainSetupVizPage))
     
-    self.button6 = tb.Button(self.sideNavFrame, text="RPY VARIANCE", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button6, self.displayComputeAngleVariancePage))
+    self.button5 = tb.Button(self.sideNavFrame, text="RPY VARIANCE", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button5, self.displayComputeAngleVariancePage))
     
-    self.button7 = tb.Button(self.sideNavFrame, text="GYR VARIANCE", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button7, self.displayComputeGyroVariancePage))
+    self.button6 = tb.Button(self.sideNavFrame, text="GYR VARIANCE", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button6, self.displayComputeGyroVariancePage))
     
-    self.button8 = tb.Button(self.sideNavFrame, text="ACC VARIANCE", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button8, self.displayComputeAccVariancePage))
+    self.button7 = tb.Button(self.sideNavFrame, text="ACC VARIANCE", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button7, self.displayComputeAccVariancePage))
     
-    self.button9 = tb.Button(self.sideNavFrame, text="I2C SETUP", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button9, self.displayI2CSetupPage))
+    self.button8 = tb.Button(self.sideNavFrame, text="I2C SETUP", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button8, self.displayI2CSetupPage))
+    
+    self.button9 = tb.Button(self.sideNavFrame, text="RESET PARAMS", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button9, self.displayResetPage))
     
     
     
@@ -66,19 +67,19 @@ class MainAppFrame(tb.Frame):
     
     # add widget to sideNavFrame
     self.label.pack(side="top", fill="x", padx=(40,0), pady=(0,40))
-    self.button1.pack(side="top", fill="x", padx=5, pady=(0,40))
+    self.button1.pack(side="top", fill="x", padx=5, pady=(0,5))
     self.button2.pack(side="top", fill="x", padx=5, pady=(0,5))
-    self.button3.pack(side="top", fill="x", padx=5, pady=(0,5))
+    self.button3.pack(side="top", fill="x", padx=5, pady=(0,40))
     self.button4.pack(side="top", fill="x", padx=5, pady=(0,40))
-    self.button5.pack(side="top", fill="x", padx=5, pady=(0,40))
+    self.button5.pack(side="top", fill="x", padx=5, pady=(0,5))
     self.button6.pack(side="top", fill="x", padx=5, pady=(0,5))
-    self.button7.pack(side="top", fill="x", padx=5, pady=(0,5))
-    self.button8.pack(side="top", fill="x", padx=5, pady=(0,40))
+    self.button7.pack(side="top", fill="x", padx=5, pady=(0,40))
+    self.button8.pack(side="top", fill="x", padx=5, pady=(0,5))
     self.button9.pack(side="top", fill="x", padx=5, pady=(0,5))
 
     
     ############Initialize the mainContentFrame ################
-    self.displayPage(self.button1, self.displayResetPage)
+    self.displayPage(self.button9, self.displayResetPage)
     ############################################################
 
 
