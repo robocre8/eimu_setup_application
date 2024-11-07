@@ -6,8 +6,9 @@ from ttkbootstrap.constants import *
 import matplotlib.pyplot as plt
 from collections import deque
 import numpy as np
-from globalParams import g
 from termcolor import colored
+
+from eimu.globalParams import g
 
 
 class CalibrateGyroFrame(tb.Frame):

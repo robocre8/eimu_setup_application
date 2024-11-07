@@ -2,15 +2,15 @@ import tkinter as tk
 import ttkbootstrap as tb
 from ttkbootstrap.constants import *
 
-from pages.I2CSetupPage import I2CSetupFrame
-from pages.ResetSetupPage import ResetSetupFrame
-from pages.GainSetupVizPage import GainSetupVizFrame
-from pages.CalibrateGyroPage import CalibrateGyroFrame
-from pages.CalibrateAccPage import CalibrateAccFrame
-from pages.CalibrateMagPage import CalibrateMagFrame
-from pages.ComputeGyroVariancePage import ComputeGyroVarFrame
-from pages.ComputeAccVariancePage import ComputeAccVarFrame
-from pages.ComputeAngleVariancePage import ComputeAngleVarFrame
+from eimu.pages.I2CSetupPage import I2CSetupFrame
+from eimu.pages.ResetSetupPage import ResetSetupFrame
+# from eimu.pages.GainSetupVizPage import GainSetupVizFrame
+from eimu.pages.CalibrateGyroPage import CalibrateGyroFrame
+from eimu.pages.CalibrateAccPage import CalibrateAccFrame
+from eimu.pages.CalibrateMagPage import CalibrateMagFrame
+from eimu.pages.ComputeGyroVariancePage import ComputeGyroVarFrame
+from eimu.pages.ComputeAccVariancePage import ComputeAccVarFrame
+from eimu.pages.ComputeAngleVariancePage import ComputeAngleVarFrame
 
 
 class MainAppFrame(tb.Frame):
@@ -42,8 +42,8 @@ class MainAppFrame(tb.Frame):
     self.button3 = tb.Button(self.sideNavFrame, text="CALIBRATE ACC", style=buttonStyleName,
                              command= lambda: self.displayPage(self.button3, self.displayCalibrateAccPage))
     
-    self.button4 = tb.Button(self.sideNavFrame, text="VIZUALIZE RPY", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button4, self.displayGainSetupVizPage))
+    # self.button4 = tb.Button(self.sideNavFrame, text="VIZUALIZE RPY", style=buttonStyleName,
+    #                          command= lambda: self.displayPage(self.button4, self.displayGainSetupVizPage))
     
     self.button5 = tb.Button(self.sideNavFrame, text="RPY VARIANCE", style=buttonStyleName,
                              command= lambda: self.displayPage(self.button5, self.displayComputeAngleVariancePage))
@@ -70,7 +70,7 @@ class MainAppFrame(tb.Frame):
     self.button1.pack(side="top", fill="x", padx=5, pady=(0,5))
     self.button2.pack(side="top", fill="x", padx=5, pady=(0,5))
     self.button3.pack(side="top", fill="x", padx=5, pady=(0,40))
-    self.button4.pack(side="top", fill="x", padx=5, pady=(0,40))
+    # self.button4.pack(side="top", fill="x", padx=5, pady=(0,40))
     self.button5.pack(side="top", fill="x", padx=5, pady=(0,5))
     self.button6.pack(side="top", fill="x", padx=5, pady=(0,5))
     self.button7.pack(side="top", fill="x", padx=5, pady=(0,40))
@@ -93,7 +93,7 @@ class MainAppFrame(tb.Frame):
     self.button1.configure(state="normal")
     self.button2.configure(state="normal")
     self.button3.configure(state="normal")
-    self.button4.configure(state="normal")
+    # self.button4.configure(state="normal")
     self.button5.configure(state="normal")
     self.button6.configure(state="normal")
     self.button7.configure(state="normal")
@@ -119,9 +119,9 @@ class MainAppFrame(tb.Frame):
     self.i2cSetupFrame = I2CSetupFrame(self.mainContentFrame)
     self.i2cSetupFrame.pack(side="left", expand=True, fill="both")
 
-  def displayGainSetupVizPage(self):
-    self.i2cSetupFrame = GainSetupVizFrame(self.mainContentFrame)
-    self.i2cSetupFrame.pack(side="left", expand=True, fill="both")
+  # def displayGainSetupVizPage(self):
+  #   self.i2cSetupFrame = GainSetupVizFrame(self.mainContentFrame)
+  #   self.i2cSetupFrame.pack(side="left", expand=True, fill="both")
 
   def displayCalibrateGyroPage(self):
     self.calibrateGyroFrame = CalibrateGyroFrame(self.mainContentFrame)

@@ -6,11 +6,10 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import numpy as np
 from scipy import linalg
-
 import time
 from termcolor import colored
-from globalParams import g
-from termcolor import colored
+
+from eimu.globalParams import g
 
 
 
