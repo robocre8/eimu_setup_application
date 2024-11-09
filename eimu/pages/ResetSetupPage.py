@@ -1,7 +1,6 @@
 import tkinter as tk
 import ttkbootstrap as tb
 from ttkbootstrap.constants import *
-from tkinter import messagebox
 from ttkbootstrap.dialogs import Messagebox
 
 from termcolor import colored
