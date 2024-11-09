@@ -133,16 +133,19 @@ class VisualizeImuFrame(tb.Frame):
       self.pitchVal.configure(text=f"{pitch}")
       self.yawVal.configure(text=f"{yaw}")
 
-      ##### perform axis computations #####################
-      up=np.array([0,0,1]) # (x,y,z)
-      x_vect=np.array([np.cos(yaw)*np.cos(pitch), np.sin(yaw)*np.cos(pitch), -1.00*np.sin(pitch)]) # (x,y,z)
-      y_vect = np.cross(up,x_vect) # (x,y,z)
-      z_vect = np.cross(x_vect,y_vect) # (x,y,z)
+      #-----------------------------------------------------------------------
+      ##### convert rpy to DCM #####################
+      DCM = [[np.cos(pitch)*np.cos(yaw), np.cos(pitch)*np.sin(yaw), -1.0*np.sin(pitch)], # cθcψ, cθsψ, −sθ
+             [(np.sin(roll)*np.sin(pitch)*np.cos(yaw)) - (np.cos(roll)*np.sin(yaw)), (np.sin(roll)*np.sin(pitch)*np.sin(yaw)) + (np.cos(roll)*np.cos(yaw)), np.sin(roll)*np.cos(pitch)], # sϕsθcψ - cϕsψ, sϕsθsψ + cϕcψ, sϕcθ
+             [(np.cos(roll)*np.sin(pitch)*np.cos(yaw)) + (np.sin(roll)*np.sin(yaw)), (np.cos(roll)*np.sin(pitch)*np.sin(yaw)) - (np.sin(roll)*np.cos(yaw)), np.cos(roll)*np.cos(pitch)]] # cϕsθcψ + sϕsψ, cϕsθsψ - sϕcψ, cϕcθ
+      
+      ##### get the IMU sensor coordinate vector from the DCM #####################
+      x_vect = DCM[0]
+      y_vect = DCM[1]
+      z_vect = DCM[2]
+      #----------------------------------------------------------------------
 
-      # z_rot = z_vect*np.cos(roll)+(np.cross(x_vect,z_vect))*np.sin(roll)
-      z_rot = z_vect*np.cos(roll)+(np.cross(x_vect,z_vect))*np.sin(roll)+x_vect*np.dot(x_vect,z_vect)*(1-np.cos(roll))
 
-      y_rot = np.cross(z_rot, x_vect)
 
       # Clear all axis
       self.ax.cla()
@@ -169,21 +172,20 @@ class VisualizeImuFrame(tb.Frame):
       self.ax.plot(z0, z1, z2, c=self.world_axis_z_color, lw=self.world_axis_line_width)
 
 
-
       # defining sensor axes
       x0 = [0, x_vect[0]]
       x1 = [0, x_vect[1]]
       x2 = [0, x_vect[2]]  
       self.ax.plot(x0, x1, x2, c=self.sensor_axis_x_color, lw=self.sensor_axis_line_width)
 
-      y0 = [0, y_rot[0]]
-      y1 = [0, y_rot[1]]
-      y2 = [0, y_rot[2]]  
+      y0 = [0, y_vect[0]]
+      y1 = [0, y_vect[1]]
+      y2 = [0, y_vect[2]]  
       self.ax.plot(y0, y1, y2, c=self.sensor_axis_y_color, lw=self.sensor_axis_line_width)
 
-      z0 = [0, z_rot[0]]
-      z1 = [0, z_rot[1]]
-      z2 = [0, z_rot[2]]  
+      z0 = [0, z_vect[0]]
+      z1 = [0, z_vect[1]]
+      z2 = [0, z_vect[2]]  
       self.ax.plot(z0, z1, z2, c=self.sensor_axis_z_color, lw=self.sensor_axis_line_width)
         
         
