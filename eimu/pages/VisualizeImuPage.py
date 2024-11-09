@@ -18,17 +18,20 @@ class VisualizeImuFrame(tb.Frame):
 
     self.fig, self.ax = None, None
 
-    self.world_axis_x_color = 'red'
+    self.world_axis_x_color = '#a00000'
     self.world_axis_y_color = 'green'
-    self.world_axis_z_color = 'blue'
+    self.world_axis_z_color = '#0000a0'
 
     self.world_axis_line_width = str(4.0)
 
     self.sensor_axis_x_color = 'red'
-    self.sensor_axis_y_color = 'green'
+    self.sensor_axis_y_color = '#00a000'
     self.sensor_axis_z_color = 'blue'
 
     self.sensor_axis_line_width = str(4.0)
+
+    # self.plot_elevation_angle = 60 
+    # self.plot_horizontal_angle = 60
     
 
     self.label = tb.Label(self, text="VIZUALIZE IMU", font=('Monospace',16, 'bold') ,bootstyle="dark")
@@ -154,6 +157,7 @@ class VisualizeImuFrame(tb.Frame):
       self.ax.set_ylim(-1.0, 1.0)
       self.ax.set_zlim(-1.0, 1.0)
       self.ax.grid(False)
+      # self.ax.view_init(self.plot_elevation_angle, self.plot_horizontal_angle)
       
       # defining world axes
       x0 = [0, 1]
@@ -203,6 +207,7 @@ class VisualizeImuFrame(tb.Frame):
     self.ax.set_ylim(-1.0, 1.0)
     self.ax.set_zlim(-1.0, 1.0)
     self.ax.grid(False)
+    # self.ax.view_init(self.plot_elevation_angle, self.plot_horizontal_angle)
     
     # defining axes
     x0 = [0, 1]
