@@ -2,10 +2,10 @@ import tkinter as tk
 import ttkbootstrap as tb
 from ttkbootstrap.constants import *
 from ttkbootstrap.dialogs import Messagebox
-from termcolor import colored
-import time
 
-from globalParams import g
+from termcolor import colored
+
+from eimu.globalParams import g
 
 
 class ResetSetupFrame(tk.Frame):
@@ -30,7 +30,6 @@ class ResetSetupFrame(tk.Frame):
     self.label.pack(side="top", fill="x", padx=(220,0), pady=(5,0))
     self.frame.place(relx=0.5, rely=0.5, anchor="center")
 
-
   def open_reset_dialog_event(self):
     dialog = Messagebox.show_question(title="RESET WARNING!!!", message="This will reset all parameters on the controller's EEPROM to default.\nAre you sure you want to continue?")
 
@@ -42,6 +41,10 @@ class ResetSetupFrame(tk.Frame):
       else:
         Messagebox.show_error("ERROR:\n\nSomething went wrong\nAttempt to reset was unsuccessful\nTry again", "ERROR")
         print(colored("ERROR:\n\nSomething went wrong\nAttempt to reset was unsuccessful\nTry again", 'red'))
+    
+    else:
+      Messagebox.show_error("ERROR:\n\nSomething went wrong\nAttempt to reset was unsuccessful\nTry again", "ERROR")
+      print(colored("ERROR:\n\nSomething went wrong\nAttempt to reset was unsuccessful\nTry again", 'red'))
 
 
   def resetAllParams(self):

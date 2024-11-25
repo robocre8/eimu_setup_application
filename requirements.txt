@@ -1,8 +1,7 @@
 pyserial
-typeguard
 ttkbootstrap
 numpy
 matplotlib
 scipy
 termcolor
-vpython=7.6.3
+pyinstaller

@@ -2,9 +2,8 @@ import tkinter as tk
 import ttkbootstrap as tb
 from ttkbootstrap.constants import *
 
-from globalParams import g
-
-from components.SetValueFrame import SetValueFrame
+from eimu.globalParams import g
+from eimu.components.SetValueFrame import SetValueFrame
 
 
 

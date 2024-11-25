@@ -25,6 +25,13 @@ this is the source code of the Easy IMU GUI application. The application require
   ```shell
     pip install virtualenv   //windows
   ```
+- install pyinstaller
+  ```shell
+    pip3 install pyinstaller //linux or mac
+  ```
+  ```shell
+    pip install pyinstaller   //windows
+  ```  
 - Ensure you have the **`Easy IMU Module`** connected to the PC.
 
 #
@@ -55,6 +62,10 @@ this is the source code of the Easy IMU GUI application. The application require
   ```shell
     python3 app.py 
   ```
+- build the application with pyinstaller:
+  ```shell
+    pyinstaller app.py --onefile --name eimu_app --icon eimu_icon.ico --hidden-import='PIL._tkinter_finder'
+  ```
 - once you are done using the application, just close and dectivate the environment
   ```shell
     deactivate
@@ -72,6 +83,10 @@ this is the source code of the Easy IMU GUI application. The application require
 - now you can run the app [follow the [blog tutorial]() on how to calibrate and setup the **Easy IMU Module**]
   ```shell
     python3 app.py 
+  ```
+- build the application with pyinstaller:
+  ```shell
+    pyinstaller app.py --onefile --name eimu_app --icon eimu_icon.ico --hidden-import='PIL._tkinter_finder'
   ```
 - once you are done using the application, just close and dectivate the environment
   ```shell
@@ -107,6 +122,10 @@ this is the source code of the Easy IMU GUI application. The application require
   ```shell
     python app.py 
   ```
+- build the application with pyinstaller:
+  ```shell
+    pyinstaller app.py --onefile --name eimu_app --icon eimu_icon.ico --hidden-import='PIL._tkinter_finder'
+  ```
 - once you are done using the application, just close and dectivate the environment
   ```shell
     deactivate
@@ -125,6 +144,10 @@ this is the source code of the Easy IMU GUI application. The application require
 - now you can run the app [follow the [blog tutorial]() on how to calibrate and setup the **`Easy IMU Module`**]
   ```shell
     python app.py 
+  ```
+- build the application with pyinstaller:
+  ```shell
+    pyinstaller app.py --onefile --name eimu_app --icon eimu_icon.ico --hidden-import='PIL._tkinter_finder'
   ```
 - once you are done using the application, just close and dectivate the environment
   ```shell

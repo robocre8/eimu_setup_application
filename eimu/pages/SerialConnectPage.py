@@ -3,13 +3,12 @@ import ttkbootstrap as tb
 from ttkbootstrap.constants import *
 from ttkbootstrap.dialogs import Messagebox
 
-import serial.tools.list_ports
-from serial_comm_lib import SerialComm
-
 import time
+import serial.tools.list_ports
 
-from globalParams import g
-from components.SelectValueFrame import SelectValueFrame
+from eimu.serial_comm_lib import SerialComm
+from eimu.globalParams import g
+from eimu.components.SelectValueFrame import SelectValueFrame
 
 
 
@@ -84,7 +83,6 @@ class SerialConnectFrame(tb.Frame):
     self.selectPort.setComboArrVal(port_list)
     self.selectPort.setComboVal("None")
     self.selectPort.setVal("None")
-
 
   def connect_serial_func(self):
     port = self.selectPort.getSelectedVal()

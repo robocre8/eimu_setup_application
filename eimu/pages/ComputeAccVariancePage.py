@@ -4,8 +4,8 @@ from ttkbootstrap.constants import *
 
 import numpy as np
 from termcolor import colored
-from globalParams import g
-from termcolor import colored
+
+from eimu.globalParams import g
 
 
 class ComputeAccVarFrame(tb.Frame):
