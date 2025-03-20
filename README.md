@@ -38,9 +38,11 @@ this is the source code of the Easy IMU GUI application. The application require
 
 #### Run App First Time [ linux or mac ]
 - Download (by clicking on the green Code button above) or clone the repo into your PC using **`git clone`**
-  > you can use this command if you want to clone the repo:
-  >
-	>  ```git clone https://github.com/samuko-things-company/eimu_setup_application.git```
+> you can use this command if you want to clone the repo:
+>
+> ```shell
+> git clone https://github.com/robocre8/eimu_setup_application.git
+> ```
 
 - change directory into the root **`eimu_setup_application`** folder
 
@@ -102,14 +104,16 @@ this is the source code of the Easy IMU GUI application. The application require
 
 #### Run App First Time [ Windows ]
 - Download (by clicking on the green Code button above) or clone the repo into your PC using **`git clone`**
-  > you can use this command if you want to clone the repo:
-  >
-	>  ```git clone https://github.com/samuko-things-company/eimu_setup_application.git```
+> you can use this command if you want to clone the repo:
+>
+> ```shell
+> git clone https://github.com/robocre8/eimu_setup_application.git
+> ```
 
 - change directory into the root **`eimu_setup_application`** folder
 
 - create a python virtual environment named **`.env`** in the root folder 
-	```shell
+  ```shell
     python3 -m venv .env
   ```
 - activate the virtual environment
