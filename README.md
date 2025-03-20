@@ -58,14 +58,17 @@ this is the source code of the Easy IMU GUI application. The application require
   ```shell
     pip3 install -r requirements.txt
   ```
-- now you can run the app [follow the [blog tutorial]() on how to calibrate and setup the **Easy IMU Module**]
+- now you can run the app 
   ```shell
     python3 app.py 
   ```
+  [follow the [blog tutorial](https://robocre8.gitbook.io/robocre8/eimu-tutorials/how-to-calibrate-and-setup-the-eimu) on how to calibrate and setup the **Easy IMU Module**]
+  
 - build the application with pyinstaller:
   ```shell
-    pyinstaller app.py --onefile --name eimu_app --icon eimu_icon.ico --hidden-import='PIL._tkinter_finder'
+    pyinstaller app.py --onefile --name eimu_app_<OS-name>_<OS-version-number> --hidden-import='PIL._tkinter_finder'
   ```
+  
 - once you are done using the application, just close and dectivate the environment
   ```shell
     deactivate
@@ -80,13 +83,15 @@ this is the source code of the Easy IMU GUI application. The application require
   ```
 - you should see now that you are in the **`.env`** virtual environment
 
-- now you can run the app [follow the [blog tutorial]() on how to calibrate and setup the **Easy IMU Module**]
+- now you can run the app 
   ```shell
     python3 app.py 
   ```
+  [follow the [blog tutorial](https://robocre8.gitbook.io/robocre8/eimu-tutorials/how-to-calibrate-and-setup-the-eimu) on how to calibrate and setup the **Easy IMU Module**]
+  
 - build the application with pyinstaller:
   ```shell
-    pyinstaller app.py --onefile --name eimu_app --icon eimu_icon.ico --hidden-import='PIL._tkinter_finder'
+    pyinstaller app.py --onefile --name eimu_app_<OS-name>_<OS-version-number> --hidden-import='PIL._tkinter_finder'
   ```
 - once you are done using the application, just close and dectivate the environment
   ```shell
@@ -118,13 +123,15 @@ this is the source code of the Easy IMU GUI application. The application require
   ```shell
     pip install -r requirements.txt
   ```
-- now you can run the app [follow the [blog tutorial]() on how to calibrate and setup the **Easy IMU Module**]
+- now you can run the app 
   ```shell
     python app.py 
   ```
+  [follow the [blog tutorial](https://robocre8.gitbook.io/robocre8/eimu-tutorials/how-to-calibrate-and-setup-the-eimu) on how to calibrate and setup the **Easy IMU Module**]
+  
 - build the application with pyinstaller:
   ```shell
-    pyinstaller app.py --onefile --name eimu_app --icon eimu_icon.ico --hidden-import='PIL._tkinter_finder'
+    pyinstaller app.py --onefile --name eimu_app_<OS-name>_<OS-version-number> --hidden-import='PIL._tkinter_finder'
   ```
 - once you are done using the application, just close and dectivate the environment
   ```shell
@@ -141,16 +148,22 @@ this is the source code of the Easy IMU GUI application. The application require
   ```
 - you should see now that you are in the **`.env`** virtual environment
 
-- now you can run the app [follow the [blog tutorial]() on how to calibrate and setup the **`Easy IMU Module`**]
+- now you can run the app 
   ```shell
     python app.py 
   ```
+  [follow the [blog tutorial](https://robocre8.gitbook.io/robocre8/eimu-tutorials/how-to-calibrate-and-setup-the-eimu) on how to calibrate and setup the **Easy IMU Module**]
+  
 - build the application with pyinstaller:
   ```shell
-    pyinstaller app.py --onefile --name eimu_app --icon eimu_icon.ico --hidden-import='PIL._tkinter_finder'
+    pyinstaller app.py --onefile --name eimu_app_<OS-name>_<OS-version-number> --hidden-import='PIL._tkinter_finder'
   ```
 - once you are done using the application, just close and dectivate the environment
   ```shell
     deactivate
   ```
 #
+
+
+
+`pyinstaller app.py --onefile --name eimu_app --icon eimu_icon.ico --hidden-import='PIL._tkinter_finder'`
