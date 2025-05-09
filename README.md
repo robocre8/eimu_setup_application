@@ -181,7 +181,32 @@ this is the source code of the Easy IMU GUI application. The application require
 
 #
 
-#### Build eimu_app with pyinstaller
+#### Build eimu_app with pyinstaller [Linux or Mac]
+
+- change directory into the root **`eimu_setup_application`** folder
+  > ```shell
+  > cd eimu_setup_application/
+  > ```
+
+- activate the virtual environment
+  > ```shell
+  > source .env/bin/activate
+  > ```
+
+- you should see now that you are in the **`.env`** virtual environment
+
+- build the application with pyinstaller:
+  > ```shell
+  > pyinstaller app.py --onefile --name eimu_app_ubuntu_<OS-version-number> --hidden-import='PIL._tkinter_finder'
+  > ```
+  > OR
+  > ```shell
+  > pyinstaller app.py --onefile --name eimu_app_mac_<OS-version-number> --hidden-import='PIL._tkinter_finder'
+  > ```
+
+#
+
+#### Build eimu_app with pyinstaller [Windows]
 
 - change directory into the root **`eimu_setup_application`** folder
   > ```shell
@@ -198,7 +223,7 @@ this is the source code of the Easy IMU GUI application. The application require
 
 - build the application with pyinstaller:
   > ```shell
-  > pyinstaller app.py --onefile --name eimu_app_<OS-name>_<OS-version-number> --hidden-import='PIL._tkinter_finder'
+  > pyinstaller app.py --onefile --name eimu_app_windows_<OS-version-number> --hidden-import='PIL._tkinter_finder'
   > ```
   
 - once you are done, close and dectivate the environment
