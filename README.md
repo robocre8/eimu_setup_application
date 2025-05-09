@@ -25,7 +25,7 @@ this is the source code of the Easy IMU GUI application. The application require
 - install python virtual environment
   > ```shell
   > sudo apt install python3-pip   # linux or mac users
-  > sudo apt install python3-virtualenv   # linux or mac users
+  > sudo apt install python3-venv   # linux or mac users
   > ```
   > *OR*
   > ```shell
