@@ -3,6 +3,7 @@ import ttkbootstrap as tb
 from ttkbootstrap.constants import *
 
 from eimu.globalParams import g
+
 from eimu.components.SetValueFrame import SetValueFrame
 
 
@@ -15,8 +16,8 @@ class I2CSetupFrame(tb.Frame):
     self.frame = tb.Frame(self)
 
     #create widgets to be added to frame
-    g.i2cAddress = int(g.serClient.get("/i2c"))
-    self.setI2Caddress = SetValueFrame(self.frame, keyTextInit="I2C_ADDRESS: ", valTextInit=g.i2cAddress,
+    isSussessful, g.i2cAddress = g.eimu.getI2cAddress()
+    self.setI2Caddress = SetValueFrame(self.frame, keyTextInit="*I2C_ADDRESS: ", valTextInit=g.i2cAddress,
                                 middleware_func=self.setI2CaddressFunc)
 
     #add framed widgets to frame
@@ -31,8 +32,8 @@ class I2CSetupFrame(tb.Frame):
   def setI2CaddressFunc(self, text):
     try:
       if text:
-        isSuccessful = g.serClient.send("/i2c", float(text))
-        val = int(g.serClient.get("/i2c"))
+        isSuccessful = g.eimu.setI2cAddress(int(text))
+        isSussessful, val = g.eimu.getI2cAddress()
         g.i2cAddress = val
     except:
       pass

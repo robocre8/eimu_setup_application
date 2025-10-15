@@ -11,19 +11,40 @@ from termcolor import colored
 from eimu.globalParams import g
 
 
-class CalibrateAccFrame(tb.Frame):
+class AccCalibrateFrame(tb.Frame):
   def __init__(self, parentFrame):
     super().__init__(master=parentFrame)
 
     # intialize parameter
     self.start_process = False
     self.loop_count = 0
-    self.no_of_samples = 1000
+    self.no_of_samples = 10000
+
+    isSuccessful = g.eimu.setWorldFrameId(1)
+
     self.acc_x = deque(maxlen=self.no_of_samples)
     self.acc_y = deque(maxlen=self.no_of_samples)
     self.acc_z = deque(maxlen=self.no_of_samples)
 
-    self.label = tb.Label(self, text="CALIBRATE ACCELEROMETER", font=('Monospace',16, 'bold') ,bootstyle="dark")
+    self.label = tb.Label(self, text="CALIBRATE ACCELEROMETER SENSOR", font=('Monospace',16, 'bold') ,bootstyle="dark")
+    
+    self.axValFrame = tb.Frame(self)
+    self.ayValFrame = tb.Frame(self)
+    self.azValFrame = tb.Frame(self)
+
+    isSuccessful, acc_arr = g.eimu.readAccOffset()
+    ax = round(acc_arr[0], 6)
+    ay = round(acc_arr[1], 6)
+    az = round(acc_arr[2], 6)
+
+    self.axText = tb.Label(self.axValFrame, text="AX-OFFSET:", font=('Monospace',10, 'bold') ,bootstyle="danger")
+    self.axVal = tb.Label(self.axValFrame, text=f'{ax}', font=('Monospace',10), bootstyle="dark")
+
+    self.ayText = tb.Label(self.ayValFrame, text="AY-OFFSET:", font=('Monospace',10, 'bold') ,bootstyle="success")
+    self.ayVal = tb.Label(self.ayValFrame, text=f'{ay}', font=('Monospace',10), bootstyle="dark")
+
+    self.azText = tb.Label(self.azValFrame, text="AZ-OFFSET:", font=('Monospace',10, 'bold') ,bootstyle="primary")
+    self.azVal = tb.Label(self.azValFrame, text=f'{az}', font=('Monospace',10), bootstyle="dark")
   
     #create widgets to be added to the Fame
     percent = 0.0
@@ -39,6 +60,17 @@ class CalibrateAccFrame(tb.Frame):
     
     self.canvasFrame = tb.Frame(self)
     
+
+    #add created widgets to displayFrame
+    self.axText.pack(side='left', fill='both')
+    self.axVal.pack(side='left', expand=True, fill='both')
+
+    self.ayText.pack(side='left', fill='both')
+    self.ayVal.pack(side='left', expand=True, fill='both')
+
+    self.azText.pack(side='left', fill='both')
+    self.azVal.pack(side='left', expand=True, fill='both')
+    
     #add created widgets to Frame
     self.label.pack(side='top', pady=(20,50))
     self.textVal.pack(side='top', expand=True, fill='y')
@@ -47,17 +79,21 @@ class CalibrateAccFrame(tb.Frame):
     self.canvasFrame.pack(side='top', expand=True, fill='both', pady=(10,0))
 
     #create widgets to be added to the canvasFame
-    self.canvas = tb.Canvas(self.canvasFrame, width=300, height=10, autostyle=False ,bg="#FFFFFF", relief='solid')
+    self.canvas = tb.Canvas(self.canvasFrame, width=300, height=2, autostyle=False ,bg="#FFFFFF", relief='solid')
 
     #add created widgets to canvasFame
-    self.canvas.pack(side='left', expand=True, fill='both')
+    self.canvas.pack(side='left', expand=True, fill='both', pady=(0,20))
+
+    self.axValFrame.pack(side='top', fill='x')
+    self.ayValFrame.pack(side='top', fill='x')
+    self.azValFrame.pack(side='top', fill='x')
 
     # start process
-    self.compute_variance()
+    self.calibrate_imu()
 
   def reset_all_params(self):
     self.loop_count = 0
-    self.no_of_samples = 1000
+
     self.acc_x = deque(maxlen=self.no_of_samples)
     self.acc_y = deque(maxlen=self.no_of_samples)
     self.acc_z = deque(maxlen=self.no_of_samples)
@@ -68,7 +104,15 @@ class CalibrateAccFrame(tb.Frame):
 
   def read_data(self):
     if self.start_process:
-      ax, ay, az = g.serClient.get("/acc-raw")
+
+      self.axVal.configure(text="0.0")
+      self.ayVal.configure(text="0.0")
+      self.azVal.configure(text="0.0")
+
+      isSuccessful, acc_arr = g.eimu.readAccRaw()
+      ax = round(acc_arr[0], 6)
+      ay = round(acc_arr[1], 6)
+      az = round(acc_arr[2], 6)
 
       self.acc_x.append(ax)
       self.acc_y.append(ay)
@@ -89,67 +133,69 @@ class CalibrateAccFrame(tb.Frame):
 
     else:
       self.reset_all_params()
-      self.canvas.after(10, self.compute_variance)
+      self.canvas.after(10, self.calibrate_imu)
 
   def plot_calibrated_data(self):
     ax_offset = self.average(self.acc_x)
     ay_offset = self.average(self.acc_y)
     az_offset = (self.average(self.acc_z) - 9.8)
 
+    g.eimu.writeAccOffset(ax_offset, ay_offset, az_offset)
+
+    isSuccessful, acc_arr = g.eimu.readAccOffset()
+    ax_offset = round(acc_arr[0], 6)
+    ay_offset = round(acc_arr[1], 6)
+    az_offset = round(acc_arr[2], 6)
+
+    self.axVal.configure(text=f'{ax_offset}')
+    self.ayVal.configure(text=f'{ay_offset}')
+    self.azVal.configure(text=f'{az_offset}')
+    
     acc_calibration = [ ax_offset, ay_offset, az_offset ]
-    print(colored("\n---------------------------------------------------------------", 'magenta'))
-    print(colored("computed acc offsets in m/s^2::", 'cyan'))
+
+    print(colored("\nacc offsets in m/s^2:", 'green'))
     print(acc_calibration)
 
-    g.serClient.send('/acc-off', ax_offset, ay_offset, az_offset)
-    ax_offset, ay_offset, az_offset = g.serClient.get('/acc-off')
-
-    acc_calibration = [ ax_offset, ay_offset, az_offset ]
-    print(colored("stored acc offsets in m/s^2:", 'green'))
-    print(acc_calibration)
-    print(colored("---------------------------------------------------------------", 'magenta'))
-
-
-    fig, (uncal, cal) = plt.subplots(nrows=2)
+    fig, (accUncal, accCal) = plt.subplots(nrows=2)
 
     # Clear all axis
-    uncal.cla()
-    cal.cla()
+    accUncal.cla()
+    accCal.cla()
     t = np.linspace(0, len(self.acc_x), len(self.acc_x))
 
 
     # plot uncalibrated data
-    uncal.plot(t, self.acc_x, color='r')
-    uncal.plot(t, self.acc_y, color='g')
-    uncal.plot(t, self.acc_z, color='b')
-    uncal.title.set_text("Uncalibrated Acc")
-    uncal.set(ylabel='g')
+    accUncal.plot(t, self.acc_x, color='r')
+    accUncal.plot(t, self.acc_y, color='g')
+    accUncal.plot(t, self.acc_z, color='b')
+    accUncal.title.set_text("Uncalibrated Acc")
+    accUncal.set(ylabel='g')
 
-    uncal.grid(which = "major", linewidth = 0.5)
-    uncal.grid(which = "minor", linewidth = 0.2)
-    uncal.minorticks_on()
+    accUncal.grid(which = "major", linewidth = 0.5)
+    accUncal.grid(which = "minor", linewidth = 0.2)
+    accUncal.minorticks_on()
 
     # plot calibrated data
-    cal.plot(t, [x - acc_calibration[0] for x in self.acc_x], color='r')
-    cal.plot(t, [y - acc_calibration[1] for y in self.acc_y], color='g')
-    cal.plot(t, [z - acc_calibration[2] for z in self.acc_z], color='b')
-    cal.title.set_text("Calibrated Acc")
-    cal.set(ylabel='g')
+    accCal.plot(t, [x - acc_calibration[0] for x in self.acc_x], color='r')
+    accCal.plot(t, [y - acc_calibration[1] for y in self.acc_y], color='g')
+    accCal.plot(t, [z - acc_calibration[2] for z in self.acc_z], color='b')
+    accCal.title.set_text("Calibrated Acc")
+    accCal.set(ylabel='m/s/s')
 
-    cal.grid(which = "major", linewidth = 0.5)
-    cal.grid(which = "minor", linewidth = 0.2)
-    cal.minorticks_on()
+    accCal.grid(which = "major", linewidth = 0.5)
+    accCal.grid(which = "minor", linewidth = 0.2)
+    accCal.minorticks_on()
 
     fig.tight_layout()
     plt.show()
 
-  def compute_variance(self):
+  def calibrate_imu(self):
     if self.start_process:
       self.reset_all_params()
       self.read_data()
     else:
       self.reset_all_params()
-      self.canvas.after(10, self.compute_variance)
+      self.canvas.after(10, self.calibrate_imu)
 
   def change_btn_state(self):
     if self.start_process:
