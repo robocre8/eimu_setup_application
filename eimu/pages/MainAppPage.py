@@ -2,9 +2,11 @@ import tkinter as tk
 import ttkbootstrap as tb
 from ttkbootstrap.constants import *
 
-from eimu.pages.MagCalibratePage import MagCalibrateFrame
+from eimu.globalParams import g
+
 from eimu.pages.GyroCalibratePage import GyroCalibrateFrame
 from eimu.pages.AccCalibratePage import AccCalibrateFrame
+from eimu.pages.YawDriftComputePage import YawDriftComputeFrame
 from eimu.pages.ImuVisualizePage import ImuVisualizeFrame
 from eimu.pages.OrientationVariancePage import OrientationVarianceFrame
 from eimu.pages.GyroVariancePage import GyroVarianceFrame 
@@ -33,14 +35,14 @@ class MainAppFrame(tb.Frame):
     buttonStyle.configure(buttonStyleName, font=('Monospace',10, 'bold'))
 
     
-    self.button1 = tb.Button(self.sideNavFrame, text="MAG CALIBRATION", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button1, self.displayMagCalibratePage))
+    self.button1 = tb.Button(self.sideNavFrame, text="GYRO CALIBRATION", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button1, self.displayGyroCalibratePage))
     
-    self.button2 = tb.Button(self.sideNavFrame, text="GYRO CALIBRATION", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button2, self.displayGyroCalibratePage))
+    self.button2 = tb.Button(self.sideNavFrame, text="ACC CALIBRATION", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button2, self.displayAccCalibratePage))
     
-    self.button3 = tb.Button(self.sideNavFrame, text="ACC CALIBRATION", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button3, self.displayAccCalibratePage))
+    self.button3 = tb.Button(self.sideNavFrame, text="YAW DRIFT COMPUTE", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button3, self.displayYawDriftComputePage))
     
     self.button4 = tb.Button(self.sideNavFrame, text="VIZUALIZE IMU DATA", style=buttonStyleName,
                              command= lambda: self.displayPage(self.button4, self.displayImuVisualizePage))
@@ -110,31 +112,41 @@ class MainAppFrame(tb.Frame):
     for frame in self.mainContentFrame.winfo_children():
       frame.destroy()
 
-  def displayMagCalibratePage(self):
-    self.magCalibrateFrame = MagCalibrateFrame(self.mainContentFrame)
-    self.magCalibrateFrame.pack(side="left", expand=True, fill="both")
-
   def displayGyroCalibratePage(self):
+    g.eimu.writeYawVelDriftBias(0.0)
+    g.eimu.clearDataBuffer()
     self.gyroCalibrateFrame = GyroCalibrateFrame(self.mainContentFrame)
     self.gyroCalibrateFrame.pack(side="left", expand=True, fill="both")
 
   def displayAccCalibratePage(self):
+    g.eimu.writeYawVelDriftBias(0.0)
+    g.eimu.clearDataBuffer()
     self.accCalibrateFrame = AccCalibrateFrame(self.mainContentFrame)
     self.accCalibrateFrame.pack(side="left", expand=True, fill="both")
+
+  def displayYawDriftComputePage(self):
+    g.eimu.writeYawVelDriftBias(0.0)
+    g.eimu.clearDataBuffer()
+    self.yawDriftComputeFrame = YawDriftComputeFrame(self.mainContentFrame)
+    self.yawDriftComputeFrame.pack(side="left", expand=True, fill="both")
   
   def displayImuVisualizePage(self):
+    g.eimu.clearDataBuffer()
     self.imuVisualizeFrame = ImuVisualizeFrame(self.mainContentFrame)
     self.imuVisualizeFrame.pack(side="left", expand=True, fill="both")
 
   def displayOrientationVariancePage(self):
+    g.eimu.clearDataBuffer()
     self.orientationVarianceFrame = OrientationVarianceFrame(self.mainContentFrame)
     self.orientationVarianceFrame.pack(side="left", expand=True, fill="both")
 
   def displayGyroVariancePage(self):
+    g.eimu.clearDataBuffer()
     self.gyroVarianceFrame = GyroVarianceFrame(self.mainContentFrame)
     self.gyroVarianceFrame.pack(side="left", expand=True, fill="both")
 
   def displayAccVariancePage(self):
+    g.eimu.clearDataBuffer()
     self.accVarianceFrame = AccVarianceFrame(self.mainContentFrame)
     self.accVarianceFrame.pack(side="left", expand=True, fill="both")
 

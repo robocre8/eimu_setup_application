@@ -37,6 +37,9 @@ GET_FRAME_ID = 0x20
 RESET_PARAMS = 0x21
 READ_QUAT_RPY = 0x22
 READ_ACC_GYRO = 0x23
+READ_YAW_WITH_DRIFT = 0x24
+READ_YAW_VEL_DRIFT_BIAS = 0x25
+WRITE_YAW_VEL_DRIFT_BIAS = 0x26
 CLEAR_DATA_BUFFER = 0x27
 READ_IMU_DATA = 0x28
 
@@ -412,3 +415,21 @@ class EIMU_FULL:
     def readAccGyro(self):
         success, imu_data_arr = self.read_data8(READ_ACC_GYRO)
         return success, imu_data_arr
+    
+    def readYawWithDrift(self):
+        success, gain = self.read_data1(READ_YAW_WITH_DRIFT, 0)
+        if success:
+            return success, round(gain,8)
+        else:
+            return success, 0
+    
+    def readYawVelDriftBias(self):
+        success, gain = self.read_data1(READ_YAW_VEL_DRIFT_BIAS, 0)
+        if success:
+            return success, round(gain,8)
+        else:
+            return success, 0
+    
+    def writeYawVelDriftBias(self, val):
+        success, res = self.write_data1(WRITE_YAW_VEL_DRIFT_BIAS, 0, val)
+        return success
