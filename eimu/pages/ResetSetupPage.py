@@ -3,8 +3,6 @@ import ttkbootstrap as tb
 from ttkbootstrap.constants import *
 from ttkbootstrap.dialogs import Messagebox
 
-from termcolor import colored
-
 from eimu.globalParams import g
 
 
@@ -19,6 +17,7 @@ class ResetSetupFrame(tk.Frame):
     buttonStyle = tb.Style()
     buttonStyleName = 'primary.TButton'
     buttonStyle.configure(buttonStyleName, font=('Monospace',10,'bold'))
+    
     self.resetButton = tb.Button(self.frame, text="RESET ALL PARAMETERS",
                                style=buttonStyleName, padding=20,
                                command=self.open_reset_dialog_event)
@@ -31,22 +30,18 @@ class ResetSetupFrame(tk.Frame):
     self.frame.place(relx=0.5, rely=0.5, anchor="center")
 
   def open_reset_dialog_event(self):
-    dialog = Messagebox.show_question(title="RESET WARNING!!!", message="This will reset all parameters on the controller's EEPROM to default.\nAre you sure you want to continue?")
+    dialog = Messagebox.show_question(title="RESET WARNING!!!", message="This will reset all parameters on the controller's MEMORY to default.\nAre you sure you want to continue?")
 
     if dialog == "Yes":
       isSuccessful = self.resetAllParams()
       if isSuccessful:
-        Messagebox.show_info("SUCCESS:\n\nParameters Reset was successful", "SUCCESS")
-        print(colored("SUCCESS:\n\nParameters Reset was successful", 'green'))
+        Messagebox.show_info("SUCCESS:\n\nParameters Reset was successful\nReset Controller and Restart Application", "SUCCESS")
       else:
-        Messagebox.show_error("ERROR:\n\nSomething went wrong\nAttempt to reset was unsuccessful\nTry again", "ERROR")
-        print(colored("ERROR:\n\nSomething went wrong\nAttempt to reset was unsuccessful\nTry again", 'red'))
+        Messagebox.show_error("ERROR:\n\nSomething went wrong\nAttempt to reset was unsuccessful", "ERROR")
     
     else:
-      Messagebox.show_error("ERROR:\n\nSomething went wrong\nAttempt to reset was unsuccessful\nTry again", "ERROR")
-      print(colored("ERROR:\n\nSomething went wrong\nAttempt to reset was unsuccessful\nTry again", 'red'))
-
+      Messagebox.show_error("INFO:\n\nOperation Was Cancelled", "ERROR")
 
   def resetAllParams(self):
-    isSuccessful = g.serClient.send("/reset")
+    isSuccessful = g.eimu.resetAllParams()
     return isSuccessful

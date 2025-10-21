@@ -1,7 +1,7 @@
 
 class g():
   app = None
-  serClient = None
+  eimu = None
   port = "None"
 
   i2cAddress = None

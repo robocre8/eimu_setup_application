@@ -2,15 +2,15 @@ import tkinter as tk
 import ttkbootstrap as tb
 from ttkbootstrap.constants import *
 
+from eimu.pages.MagCalibratePage import MagCalibrateFrame
+from eimu.pages.GyroCalibratePage import GyroCalibrateFrame
+from eimu.pages.AccCalibratePage import AccCalibrateFrame
+from eimu.pages.ImuVisualizePage import ImuVisualizeFrame
+from eimu.pages.OrientationVariancePage import OrientationVarianceFrame
+from eimu.pages.GyroVariancePage import GyroVarianceFrame 
+from eimu.pages.AccVariancePage import AccVarianceFrame 
 from eimu.pages.I2CSetupPage import I2CSetupFrame
 from eimu.pages.ResetSetupPage import ResetSetupFrame
-from eimu.pages.VisualizeImuPage import VisualizeImuFrame
-from eimu.pages.CalibrateGyroPage import CalibrateGyroFrame
-from eimu.pages.CalibrateAccPage import CalibrateAccFrame
-from eimu.pages.CalibrateMagPage import CalibrateMagFrame
-from eimu.pages.ComputeGyroVariancePage import ComputeGyroVarFrame
-from eimu.pages.ComputeAccVariancePage import ComputeAccVarFrame
-from eimu.pages.ComputeAngleVariancePage import ComputeAngleVarFrame
 
 
 class MainAppFrame(tb.Frame):
@@ -30,29 +30,29 @@ class MainAppFrame(tb.Frame):
 
     buttonStyle = tb.Style()
     buttonStyleName = 'primary.Link.TButton'
-    buttonStyle.configure(buttonStyleName, font=('Monospace',12, 'bold'))
+    buttonStyle.configure(buttonStyleName, font=('Monospace',10, 'bold'))
 
     
-    self.button1 = tb.Button(self.sideNavFrame, text="CALIBRATE MAG", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button1, self.displayCalibrateMagPage))
+    self.button1 = tb.Button(self.sideNavFrame, text="MAG CALIBRATION", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button1, self.displayMagCalibratePage))
     
-    self.button2 = tb.Button(self.sideNavFrame, text="CALIBRATE GYR", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button2, self.displayCalibrateGyroPage))
+    self.button2 = tb.Button(self.sideNavFrame, text="GYRO CALIBRATION", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button2, self.displayGyroCalibratePage))
     
-    self.button3 = tb.Button(self.sideNavFrame, text="CALIBRATE ACC", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button3, self.displayCalibrateAccPage))
+    self.button3 = tb.Button(self.sideNavFrame, text="ACC CALIBRATION", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button3, self.displayAccCalibratePage))
     
-    self.button4 = tb.Button(self.sideNavFrame, text="VIZUALIZE RPY", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button4, self.displayVisualizeImuPage))
+    self.button4 = tb.Button(self.sideNavFrame, text="VIZUALIZE IMU DATA", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button4, self.displayImuVisualizePage))
     
     self.button5 = tb.Button(self.sideNavFrame, text="RPY VARIANCE", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button5, self.displayComputeAngleVariancePage))
+                             command= lambda: self.displayPage(self.button5, self.displayOrientationVariancePage))
     
-    self.button6 = tb.Button(self.sideNavFrame, text="GYR VARIANCE", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button6, self.displayComputeGyroVariancePage))
+    self.button6 = tb.Button(self.sideNavFrame, text="GYRO VARIANCE", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button6, self.displayGyroVariancePage))
     
     self.button7 = tb.Button(self.sideNavFrame, text="ACC VARIANCE", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button7, self.displayComputeAccVariancePage))
+                             command= lambda: self.displayPage(self.button7, self.displayAccVariancePage))
     
     self.button8 = tb.Button(self.sideNavFrame, text="I2C SETUP", style=buttonStyleName,
                              command= lambda: self.displayPage(self.button8, self.displayI2CSetupPage))
@@ -69,11 +69,11 @@ class MainAppFrame(tb.Frame):
     self.label.pack(side="top", fill="x", padx=(40,0), pady=(0,40))
     self.button1.pack(side="top", fill="x", padx=5, pady=(0,5))
     self.button2.pack(side="top", fill="x", padx=5, pady=(0,5))
-    self.button3.pack(side="top", fill="x", padx=5, pady=(0,40))
-    self.button4.pack(side="top", fill="x", padx=5, pady=(0,40))
+    self.button3.pack(side="top", fill="x", padx=5, pady=(0,30))
+    self.button4.pack(side="top", fill="x", padx=5, pady=(0,30))
     self.button5.pack(side="top", fill="x", padx=5, pady=(0,5))
     self.button6.pack(side="top", fill="x", padx=5, pady=(0,5))
-    self.button7.pack(side="top", fill="x", padx=5, pady=(0,40))
+    self.button7.pack(side="top", fill="x", padx=5, pady=(0,30))
     self.button8.pack(side="top", fill="x", padx=5, pady=(0,5))
     self.button9.pack(side="top", fill="x", padx=5, pady=(0,5))
 
@@ -110,39 +110,38 @@ class MainAppFrame(tb.Frame):
     for frame in self.mainContentFrame.winfo_children():
       frame.destroy()
 
+  def displayMagCalibratePage(self):
+    self.magCalibrateFrame = MagCalibrateFrame(self.mainContentFrame)
+    self.magCalibrateFrame.pack(side="left", expand=True, fill="both")
 
-  def displayResetPage(self):
-    self.resetFrame = ResetSetupFrame(self.mainContentFrame)
-    self.resetFrame.pack(side="left", expand=True, fill="both")
+  def displayGyroCalibratePage(self):
+    self.gyroCalibrateFrame = GyroCalibrateFrame(self.mainContentFrame)
+    self.gyroCalibrateFrame.pack(side="left", expand=True, fill="both")
+
+  def displayAccCalibratePage(self):
+    self.accCalibrateFrame = AccCalibrateFrame(self.mainContentFrame)
+    self.accCalibrateFrame.pack(side="left", expand=True, fill="both")
   
+  def displayImuVisualizePage(self):
+    self.imuVisualizeFrame = ImuVisualizeFrame(self.mainContentFrame)
+    self.imuVisualizeFrame.pack(side="left", expand=True, fill="both")
+
+  def displayOrientationVariancePage(self):
+    self.orientationVarianceFrame = OrientationVarianceFrame(self.mainContentFrame)
+    self.orientationVarianceFrame.pack(side="left", expand=True, fill="both")
+
+  def displayGyroVariancePage(self):
+    self.gyroVarianceFrame = GyroVarianceFrame(self.mainContentFrame)
+    self.gyroVarianceFrame.pack(side="left", expand=True, fill="both")
+
+  def displayAccVariancePage(self):
+    self.accVarianceFrame = AccVarianceFrame(self.mainContentFrame)
+    self.accVarianceFrame.pack(side="left", expand=True, fill="both")
+
   def displayI2CSetupPage(self):
     self.i2cSetupFrame = I2CSetupFrame(self.mainContentFrame)
     self.i2cSetupFrame.pack(side="left", expand=True, fill="both")
 
-  def displayVisualizeImuPage(self):
-    self.i2cSetupFrame = VisualizeImuFrame(self.mainContentFrame)
-    self.i2cSetupFrame.pack(side="left", expand=True, fill="both")
-
-  def displayCalibrateGyroPage(self):
-    self.calibrateGyroFrame = CalibrateGyroFrame(self.mainContentFrame)
-    self.calibrateGyroFrame.pack(side="left", expand=True, fill="both")
-
-  def displayCalibrateAccPage(self):
-    self.calibrateAccFrame = CalibrateAccFrame(self.mainContentFrame)
-    self.calibrateAccFrame.pack(side="left", expand=True, fill="both")
-
-  def displayCalibrateMagPage(self):
-    self.calibrateMagFrame = CalibrateMagFrame(self.mainContentFrame)
-    self.calibrateMagFrame.pack(side="left", expand=True, fill="both")
-
-  def displayComputeGyroVariancePage(self):
-    self.computeGyroVarianceFrame = ComputeGyroVarFrame(self.mainContentFrame)
-    self.computeGyroVarianceFrame.pack(side="left", expand=True, fill="both")
-
-  def displayComputeAccVariancePage(self):
-    self.computeAccVarianceFrame = ComputeAccVarFrame(self.mainContentFrame)
-    self.computeAccVarianceFrame.pack(side="left", expand=True, fill="both")
-
-  def displayComputeAngleVariancePage(self):
-    self.computeAngleVarianceFrame = ComputeAngleVarFrame(self.mainContentFrame)
-    self.computeAngleVarianceFrame.pack(side="left", expand=True, fill="both")
+  def displayResetPage(self):
+    self.resetFrame = ResetSetupFrame(self.mainContentFrame)
+    self.resetFrame.pack(side="left", expand=True, fill="both")

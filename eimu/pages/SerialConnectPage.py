@@ -3,10 +3,11 @@ import ttkbootstrap as tb
 from ttkbootstrap.constants import *
 from ttkbootstrap.dialogs import Messagebox
 
-import time
 import serial.tools.list_ports
+from eimu.eimu_full import EIMU_FULL
 
-from eimu.serial_comm_lib import SerialComm
+import time
+
 from eimu.globalParams import g
 from eimu.components.SelectValueFrame import SelectValueFrame
 
@@ -67,14 +68,15 @@ class SerialConnectFrame(tb.Frame):
       port_list = ['None']
 
 
-  def connectToPort(self, name):
+  def connectToPort(self, port):
     try:
-      g.serClient = SerialComm(name)
-      time.sleep(6)
-      data = g.serClient.get("/gain")
-      # print(data)
+      g.eimu = EIMU_FULL(port)
+      time.sleep(4)
+      success, ref_frame_id = g.eimu.getWorldFrameId()
+      success = g.eimu.clearDataBuffer()
       return True
-    except:
+    except Exception as e: # Catching a general exception as a fallback
+      print(f"An unexpected error occurred: {e}")
       return False
 
   
@@ -84,13 +86,14 @@ class SerialConnectFrame(tb.Frame):
     self.selectPort.setComboVal("None")
     self.selectPort.setVal("None")
 
+
   def connect_serial_func(self):
     port = self.selectPort.getSelectedVal()
     serIsConnected = self.connectToPort(port)
     if serIsConnected:
       # print("connection successful")
-      Messagebox.show_info(f"SUCCESS:\n\nMPU9250 EIMU Module found on port: {port}\n\nclick OK to continue", "SUCCESS")
+      Messagebox.show_info(f"SUCCESS:\n\nEIMU Module found on port: {port}\n\nclick OK to continue", "SUCCESS")
       self.next_func()
     else:
       # print("Error connecting to driver")
-      Messagebox.show_error(f"ERROR:\n\nno MPU9250 EIMU Module found on port: {port}\n\ntry again or try another port", "ERROR")
+      Messagebox.show_error(f"ERROR:\n\nno EIMU Module found on port: {port}\n\ntry again or try another port", "ERROR")

@@ -13,7 +13,7 @@ from eimu.globalParams import g
 
 
 
-class CalibrateMagFrame(tb.Frame):
+class MagCalibrateFrame(tb.Frame):
   def __init__(self, parentFrame):
     super().__init__(master=parentFrame)
 
@@ -26,6 +26,8 @@ class CalibrateMagFrame(tb.Frame):
     self.mag_y = []
     self.mag_z = []
 
+    isSuccessful = g.eimu.setWorldFrameId(1)
+
     self.anim = None
     self.stop = False
     self.calibrated = False
@@ -34,7 +36,7 @@ class CalibrateMagFrame(tb.Frame):
     self.fig, self.ax = None, None
     
 
-    self.label = tb.Label(self, text="CALIBRATE MAGNETOMETER", font=('Monospace',16, 'bold') ,bootstyle="dark")
+    self.label = tb.Label(self, text="CALIBRATE MAGNETOMETER SENSOR", font=('Monospace',16, 'bold') ,bootstyle="dark")
     self.frame = tb.Frame(self)
     
     #create widgets to be added to frame1
@@ -66,34 +68,42 @@ class CalibrateMagFrame(tb.Frame):
     self.A_1 = np.real(self.F / np.sqrt(np.dot(n.T, np.dot(M_1, n)) - d) * linalg.sqrtm(M))
 
     ################################################
-    b_vect = [[0.0], [0.0], [0.0]]
-    A_mat = [[0.0, 0.0, 0.0],[0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
+    b_vect = np.zeros([3, 1])
+    A_mat = np.eye(3)
 
-    time.sleep(0.1)
-    g.serClient.send('/bvect', self.b[0][0], self.b[1][0], self.b[2][0])
-    b_vect[0][0], b_vect[1][0], b_vect[2][0] = g.serClient.get('/bvect')
-    time.sleep(0.05)
+    g.eimu.writeMagHardOffset(self.b[0][0], self.b[1][0], self.b[2][0])
+
+    isSuccessful, mag_arr = g.eimu.readMagHardOffset()
+    b_vect[0][0] = round(mag_arr[0], 6)
+    b_vect[1][0] = round(mag_arr[1], 6)
+    b_vect[2][0] = round(mag_arr[2], 6)
     
-    for i in range(3):
-      g.serClient.send(f'/amatR{i}', self.A_1[i][0], self.A_1[i][1], self.A_1[i][2])
-      A_mat[i][0], A_mat[i][1], A_mat[i][2] = g.serClient.get(f'/amatR{i}')
-      time.sleep(0.05)
+    g.eimu.writeMagSoftOffset0(self.A_1[0][0], self.A_1[0][1], self.A_1[0][2])
+    g.eimu.writeMagSoftOffset1(self.A_1[1][0], self.A_1[1][1], self.A_1[1][2])
+    g.eimu.writeMagSoftOffset2(self.A_1[2][0], self.A_1[2][1], self.A_1[2][2])
+
+    isSuccessful, mag_arr = g.eimu.readMagSoftOffset0()
+    A_mat[0][0] = round(mag_arr[0], 6)
+    A_mat[0][1] = round(mag_arr[1], 6)
+    A_mat[0][2] = round(mag_arr[2], 6)
+
+    isSuccessful, mag_arr = g.eimu.readMagSoftOffset1()
+    A_mat[1][0] = round(mag_arr[0], 6)
+    A_mat[1][1] = round(mag_arr[1], 6)
+    A_mat[1][2] = round(mag_arr[2], 6)
+
+    isSuccessful, mag_arr = g.eimu.readMagSoftOffset2()
+    A_mat[2][0] = round(mag_arr[0], 6)
+    A_mat[2][1] = round(mag_arr[1], 6)
+    A_mat[2][2] = round(mag_arr[2], 6)
 
     ################################################
     
-    print(colored("\n---------------------------------------------------------------", 'magenta'))
-    print(colored("computed A_1 matrix:", 'cyan'))
-    print(self.A_1)
-    print(colored("stored A_1 matrix:", 'green'))
-    print(A_mat)
-    print(colored("---------------------------------------------------------------", 'magenta'))
-
-    print(colored("\n---------------------------------------------------------------", 'magenta'))
-    print(colored("computed b vector:", 'cyan'))
-    print(self.b)
-    print(colored("stored b vector:", 'green'))
+    print(colored("\nHard Iron Offset (b_vect)", 'green'))
     print(b_vect)
-    print(colored("---------------------------------------------------------------", 'magenta'))
+    
+    print(colored("\nSoft Iron Offset (A_mat):", 'green'))
+    print(A_mat)
 
 
 
@@ -200,9 +210,15 @@ class CalibrateMagFrame(tb.Frame):
   def animate(self,i):
     try:
       if self.calibrated == False:
-        mx, my, mz = g.serClient.get("/mag-raw")
+        isSuccessful, mag_arr = g.eimu.readMagRaw()
+        mx = round(mag_arr[0], 6)
+        my = round(mag_arr[1], 6)
+        mz = round(mag_arr[2], 6)
       else:
-        mx, my, mz = g.serClient.get("/mag-cal")
+        isSuccessful, mag_arr = g.eimu.readMag()
+        mx = round(mag_arr[0], 6)
+        my = round(mag_arr[1], 6)
+        mz = round(mag_arr[2], 6)
       
       self.magArray.append([mx,my,mz])
       self.mag_x.append(mx)
