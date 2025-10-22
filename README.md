@@ -15,11 +15,6 @@ this is the source code of the Easy IMU GUI application. The application require
 #### Prequisites
 - This would run on **Linux (Ubuntu)**, **Windows**, and **MAC OS**
 
-> [!NOTE]  
-> For Windows and Mac Users, ensure you have the [**`CH340 serial converter`**](https://sparks.gogo.co.nz/ch340.html?srsltid=AfmBOooJ45evOXTZdp96-_eI1A2xCokPqFyJm0e_Ybx6LOwyY0qJ5Uux) driver installed.
->
-> For Ubuntu Users - the **CH340** driver is installed by default.
-
 - Ensure you have `python3` installed on your PC and also `pip`
 
 - install python virtual environment
