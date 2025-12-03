@@ -38,11 +38,11 @@ class ImuVisualizeFrame(tb.Frame):
     self.label = tb.Label(self, text="VIZUALIZE IMU DATA", font=('Monospace',16, 'bold') ,bootstyle="dark")
   
     #create widgets to be added to the Fame
-    isSuccessful, g.frameId = g.eimu.getWorldFrameId()
+    g.frameId = g.eimu.getWorldFrameId()
     self.selectFrameId = SelectValueFrame(self, keyTextInit=f"REFERENCE_FRAME: ", valTextInit=g.frameList[g.frameId],
-                                          initialComboValues=g.frameList, middileware_func=self.selectFrameIdFunc)
+                                          initialComboValues=g.frameList, middileware_func=self.selectFrameIdFunc )
     
-    isSuccessful, g.filterGain = g.eimu.getFilterGain()
+    g.filterGain = g.eimu.getFilterGain()
     self.setFilterGain = SetValueFrame(self, keyTextInit="FILTER_GAIN: ", valTextInit=g.filterGain,
                                 middleware_func=self.setFilterGainFunc)
     
@@ -71,10 +71,7 @@ class ImuVisualizeFrame(tb.Frame):
     self.gyValFrame = tb.Frame(self.angularVelValFrame)
     self.gzValFrame = tb.Frame(self.angularVelValFrame)
 
-    isSuccessful, rpy_arr = g.eimu.readRPY()
-    r = round(rpy_arr[0], 6)
-    p = round(rpy_arr[1], 6)
-    y = round(rpy_arr[2], 6)
+    r, p, y, ax, ay, az, gx, gy, gz = g.eimu.readImuData()
 
     self.rText = tb.Label(self.rValFrame, text="R:", font=('Monospace',10, 'bold') ,bootstyle="danger")
     self.rVal = tb.Label(self.rValFrame, text=f'{r}', font=('Monospace',10), bootstyle="dark")
@@ -85,10 +82,6 @@ class ImuVisualizeFrame(tb.Frame):
     self.yText = tb.Label(self.yValFrame, text="Y:", font=('Monospace',10, 'bold') ,bootstyle="primary")
     self.yVal = tb.Label(self.yValFrame, text=f'{y}', font=('Monospace',10), bootstyle="dark")
 
-    isSuccessful, acc_arr = g.eimu.readAcc()
-    ax = round(acc_arr[0], 6)
-    ay = round(acc_arr[1], 6)
-    az = round(acc_arr[2], 6)
 
     self.axText = tb.Label(self.axValFrame, text="AX:", font=('Monospace',10, 'bold') ,bootstyle="danger")
     self.axVal = tb.Label(self.axValFrame, text=f'{ax}', font=('Monospace',10), bootstyle="dark")
@@ -99,10 +92,6 @@ class ImuVisualizeFrame(tb.Frame):
     self.azText = tb.Label(self.azValFrame, text="AZ:", font=('Monospace',10, 'bold') ,bootstyle="primary")
     self.azVal = tb.Label(self.azValFrame, text=f'{az}', font=('Monospace',10), bootstyle="dark")
 
-    isSuccessful, gyro_arr = g.eimu.readGyro()
-    gx = round(gyro_arr[0], 6)
-    gy = round(gyro_arr[1], 6)
-    gz = round(gyro_arr[2], 6)
 
     self.gxText = tb.Label(self.axValFrame, text="GX:", font=('Monospace',10, 'bold') ,bootstyle="danger")
     self.gxVal = tb.Label(self.axValFrame, text=f'{gx}', font=('Monospace',10), bootstyle="dark")
@@ -172,32 +161,36 @@ class ImuVisualizeFrame(tb.Frame):
     try:
       if text:
         isSuccessful = g.eimu.setFilterGain(float(text))
-        isSuccessful, val = g.eimu.getFilterGain()
-        g.filterGain = val
+        g.filterGain = g.eimu.getFilterGain()
     except:
       pass
   
     return g.filterGain
   
 
-  def selectFrameIdFunc(self, frame_val_str):
-    try:
-      if frame_val_str:
-        isSuccessful = g.eimu.clearDataBuffer()
+  # def selectFrameIdFunc(self, frame_val_str):
+  #   try:
+  #     if frame_val_str:
+  #       isSuccessful = g.eimu.clearDataBuffer()
         
-        if frame_val_str == g.frameList[0]:
-          isSuccessful = g.eimu.setWorldFrameId(0)
+  #       if frame_val_str == g.frameList[0]:
+  #         isSuccessful = g.eimu.setWorldFrameId(0)
           
-        elif frame_val_str == g.frameList[1]:
-          isSuccessful = g.eimu.setWorldFrameId(1)
+  #       elif frame_val_str == g.frameList[1]:
+  #         isSuccessful = g.eimu.setWorldFrameId(1)
         
-        elif frame_val_str == g.frameList[2]:
-          isSuccessful = g.eimu.setWorldFrameId(2)
+  #       elif frame_val_str == g.frameList[2]:
+  #         isSuccessful = g.eimu.setWorldFrameId(2)
 
-    except:
-      pass
+  #   except:
+  #     pass
 
-    isSuccessful, g.frameId = g.eimu.getWorldFrameId()
+  #   g.frameId = g.eimu.getWorldFrameId()
+  #   return g.frameList[g.frameId]
+
+
+  def selectFrameIdFunc(self, frame_val_str):
+    g.frameId = g.eimu.getWorldFrameId()
     return g.frameList[g.frameId]
 
 
@@ -208,28 +201,15 @@ class ImuVisualizeFrame(tb.Frame):
 
   def animate(self,i):
     try:
-      isSuccessful, rpy_arr = g.eimu.readRPY()
-      r = round(rpy_arr[0], 6)
-      p = round(rpy_arr[1], 6)
-      y = round(rpy_arr[2], 6)
+      r, p, y, ax, ay, az, gx, gy, gz = g.eimu.readImuData()
       
       self.rVal.configure(text=f"{r}")
       self.pVal.configure(text=f"{p}")
       self.yVal.configure(text=f"{y}")
-
-      isSuccessful, acc_arr = g.eimu.readAcc()
-      ax = round(acc_arr[0], 6)
-      ay = round(acc_arr[1], 6)
-      az = round(acc_arr[2], 6)
       
       self.axVal.configure(text=f"{ax}")
       self.ayVal.configure(text=f"{ay}")
       self.azVal.configure(text=f"{az}")
-
-      isSuccessful, gyro_arr = g.eimu.readGyro()
-      gx = round(gyro_arr[0], 6)
-      gy = round(gyro_arr[1], 6)
-      gz = round(gyro_arr[2], 6)
       
       self.gxVal.configure(text=f"{gx}")
       self.gyVal.configure(text=f"{gy}")

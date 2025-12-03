@@ -29,10 +29,7 @@ class GyroVarianceFrame(tb.Frame):
     self.gyValFrame = tb.Frame(self)
     self.gzValFrame = tb.Frame(self)
 
-    isSuccessful, gyro_arr = g.eimu.readGyroVariance()
-    gx = round(gyro_arr[0], 6)
-    gy = round(gyro_arr[1], 6)
-    gz = round(gyro_arr[2], 6)
+    gx, gy, gz = g.eimu.readGyroVariance()
 
     self.gxText = tb.Label(self.gxValFrame, text="GX-VARIANCE:", font=('Monospace',10, 'bold') ,bootstyle="danger")
     self.gxVal = tb.Label(self.gxValFrame, text=f'{gx}', font=('Monospace',10), bootstyle="dark")
@@ -105,27 +102,27 @@ class GyroVarianceFrame(tb.Frame):
       self.gyVal.configure(text="0.0")
       self.gzVal.configure(text="0.0")
 
-      isSuccessful, gyro_arr = g.eimu.readGyro()
-      gyrox_cal = round(gyro_arr[0], 6)
-      gyroy_cal = round(gyro_arr[1], 6)
-      gyroz_cal = round(gyro_arr[2], 6)
+      try:
+        gyrox_cal, gyroy_cal, gyroz_cal = g.eimu.readGyro()
 
-      self.gyrox_arr.append(gyrox_cal)
-      self.gyroy_arr.append(gyroy_cal)
-      self.gyroz_arr.append(gyroz_cal)
+        self.gyrox_arr.append(gyrox_cal)
+        self.gyroy_arr.append(gyroy_cal)
+        self.gyroz_arr.append(gyroz_cal)
 
-      self.loop_count += 1
-      percent = (self.loop_count*100)/self.no_of_samples
-      self.textVal.configure(text=f'{percent} %')
-      self.progressBar['value'] = percent
-
-      if percent >= 100.0:
-        percent = 100.0
+        self.loop_count += 1
+        percent = (self.loop_count*100)/self.no_of_samples
         self.textVal.configure(text=f'{percent} %')
         self.progressBar['value'] = percent
-        self.print_computed_variance()
-      else:
-        self.canvas.after(1, self.read_cal_data)
+
+        if percent >= 100.0:
+          percent = 100.0
+          self.textVal.configure(text=f'{percent} %')
+          self.progressBar['value'] = percent
+          self.print_computed_variance()
+        else:
+          self.canvas.after(10, self.read_cal_data)
+      except:
+        pass
 
     else:
       self.reset_all_params()
@@ -139,10 +136,7 @@ class GyroVarianceFrame(tb.Frame):
 
     g.eimu.writeGyroVariance(gyrox_variance, gyroy_variance, gyroz_variance)
 
-    isSuccessful, gyro_arr = g.eimu.readGyroVariance()
-    gyrox_variance = round(gyro_arr[0], 6)
-    gyroy_variance = round(gyro_arr[1], 6)
-    gyroz_variance = round(gyro_arr[2], 6)
+    gyrox_variance, gyroy_variance, gyroz_variance = g.eimu.readGyroVariance()
 
     self.gxVal.configure(text=f'{gyrox_variance}')
     self.gyVal.configure(text=f'{gyroy_variance}')

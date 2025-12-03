@@ -15,7 +15,7 @@ class OrientationVarianceFrame(tb.Frame):
     # intialize parameter
     self.start_process = False
     self.loop_count = 0
-    self.no_of_samples = 10000
+    self.no_of_samples = 1000
 
     g.eimu.setWorldFrameId(1)
 
@@ -29,10 +29,7 @@ class OrientationVarianceFrame(tb.Frame):
     self.pValFrame = tb.Frame(self)
     self.yValFrame = tb.Frame(self)
 
-    isSuccessful, rpy_arr = g.eimu.readRPYVariance()
-    r = round(rpy_arr[0], 6)
-    p = round(rpy_arr[1], 6)
-    y = round(rpy_arr[2], 6)
+    r, p, y = g.eimu.readRPYVariance()
 
     self.rText = tb.Label(self.rValFrame, text="R-VARIANCE:", font=('Monospace',10, 'bold') ,bootstyle="danger")
     self.rVal = tb.Label(self.rValFrame, text=f'{r}', font=('Monospace',10), bootstyle="dark")
@@ -105,27 +102,28 @@ class OrientationVarianceFrame(tb.Frame):
       self.pVal.configure(text="0.0")
       self.yVal.configure(text="0.0")
 
-      isSuccessful, rpy_arr = g.eimu.readRPY()
-      r = round(rpy_arr[0], 6)
-      p = round(rpy_arr[1], 6)
-      y = round(rpy_arr[2], 6)
+      try:
+        r, p, y = g.eimu.readRPY()
+        self.r_arr.append(r)
+        self.p_arr.append(p)
+        self.y_arr.append(y)
 
-      self.r_arr.append(r)
-      self.p_arr.append(p)
-      self.y_arr.append(y)
-
-      self.loop_count += 1
-      percent = (self.loop_count*100)/self.no_of_samples
-      self.textVal.configure(text=f'{percent} %')
-      self.progressBar['value'] = percent
-
-      if percent >= 100.0:
-        percent = 100.0
+        self.loop_count += 1
+        percent = (self.loop_count*100)/self.no_of_samples
         self.textVal.configure(text=f'{percent} %')
         self.progressBar['value'] = percent
-        self.print_computed_variance()
-      else:
-        self.canvas.after(1, self.read_cal_data)
+
+        if percent >= 100.0:
+          percent = 100.0
+          self.textVal.configure(text=f'{percent} %')
+          self.progressBar['value'] = percent
+          self.print_computed_variance()
+        else:
+          self.canvas.after(10, self.read_cal_data)
+      except:
+        pass
+
+      
 
     else:
       self.reset_all_params()
@@ -139,10 +137,7 @@ class OrientationVarianceFrame(tb.Frame):
 
     g.eimu.writeRPYVariance(r_variance, p_variance, y_variance)
 
-    isSuccessful, rpy_arr = g.eimu.readRPYVariance()
-    r_variance = round(rpy_arr[0], 6)
-    p_variance = round(rpy_arr[1], 6)
-    y_variance = round(rpy_arr[2], 6)
+    r_variance, p_variance, y_variance = g.eimu.readRPYVariance()
 
     self.rVal.configure(text=f'{r_variance}')
     self.pVal.configure(text=f'{p_variance}')

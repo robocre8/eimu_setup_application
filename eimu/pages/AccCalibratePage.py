@@ -18,7 +18,7 @@ class AccCalibrateFrame(tb.Frame):
     # intialize parameter
     self.start_process = False
     self.loop_count = 0
-    self.no_of_samples = 10000
+    self.no_of_samples = 1000
 
     isSuccessful = g.eimu.setWorldFrameId(1)
 
@@ -32,10 +32,7 @@ class AccCalibrateFrame(tb.Frame):
     self.ayValFrame = tb.Frame(self)
     self.azValFrame = tb.Frame(self)
 
-    isSuccessful, acc_arr = g.eimu.readAccOffset()
-    ax = round(acc_arr[0], 6)
-    ay = round(acc_arr[1], 6)
-    az = round(acc_arr[2], 6)
+    ax, ay, az = g.eimu.readAccOffset()
 
     self.axText = tb.Label(self.axValFrame, text="AX-OFFSET:", font=('Monospace',10, 'bold') ,bootstyle="danger")
     self.axVal = tb.Label(self.axValFrame, text=f'{ax}', font=('Monospace',10), bootstyle="dark")
@@ -109,27 +106,27 @@ class AccCalibrateFrame(tb.Frame):
       self.ayVal.configure(text="0.0")
       self.azVal.configure(text="0.0")
 
-      isSuccessful, acc_arr = g.eimu.readAccRaw()
-      ax = round(acc_arr[0], 6)
-      ay = round(acc_arr[1], 6)
-      az = round(acc_arr[2], 6)
+      try:
+        ax, ay, az = g.eimu.readAccRaw()
 
-      self.acc_x.append(ax)
-      self.acc_y.append(ay)
-      self.acc_z.append(az)
+        self.acc_x.append(ax)
+        self.acc_y.append(ay)
+        self.acc_z.append(az)
 
-      self.loop_count += 1
-      percent = (self.loop_count*100)/self.no_of_samples
-      self.textVal.configure(text=f'{percent} %')
-      self.progressBar['value'] = percent
-
-      if percent >= 100.0:
-        percent = 100.0
+        self.loop_count += 1
+        percent = (self.loop_count*100)/self.no_of_samples
         self.textVal.configure(text=f'{percent} %')
         self.progressBar['value'] = percent
-        self.plot_calibrated_data()
-      else:
-        self.canvas.after(1, self.read_data)
+
+        if percent >= 100.0:
+          percent = 100.0
+          self.textVal.configure(text=f'{percent} %')
+          self.progressBar['value'] = percent
+          self.plot_calibrated_data()
+        else:
+          self.canvas.after(10, self.read_data)
+      except:
+        pass
 
     else:
       self.reset_all_params()
@@ -142,10 +139,7 @@ class AccCalibrateFrame(tb.Frame):
 
     g.eimu.writeAccOffset(ax_offset, ay_offset, az_offset)
 
-    isSuccessful, acc_arr = g.eimu.readAccOffset()
-    ax_offset = round(acc_arr[0], 6)
-    ay_offset = round(acc_arr[1], 6)
-    az_offset = round(acc_arr[2], 6)
+    ax_offset, ay_offset, az_offset = g.eimu.readAccOffset()
 
     self.axVal.configure(text=f'{ax_offset}')
     self.ayVal.configure(text=f'{ay_offset}')

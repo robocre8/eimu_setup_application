@@ -26,12 +26,12 @@ class MagCalibrateFrame(tb.Frame):
     self.mag_y = []
     self.mag_z = []
 
-    isSuccessful = g.eimu.setWorldFrameId(1)
-
     self.anim = None
     self.stop = False
     self.calibrated = False
     self.HISTORY_SIZE = 10000
+
+    isSuccessful = g.eimu.setWorldFrameId(1)
 
     self.fig, self.ax = None, None
     
@@ -68,34 +68,22 @@ class MagCalibrateFrame(tb.Frame):
     self.A_1 = np.real(self.F / np.sqrt(np.dot(n.T, np.dot(M_1, n)) - d) * linalg.sqrtm(M))
 
     ################################################
+
     b_vect = np.zeros([3, 1])
     A_mat = np.eye(3)
-
+    
     g.eimu.writeMagHardOffset(self.b[0][0], self.b[1][0], self.b[2][0])
 
-    isSuccessful, mag_arr = g.eimu.readMagHardOffset()
-    b_vect[0][0] = round(mag_arr[0], 6)
-    b_vect[1][0] = round(mag_arr[1], 6)
-    b_vect[2][0] = round(mag_arr[2], 6)
+    b_vect[0][0], b_vect[1][0], b_vect[2][0] = g.eimu.readMagHardOffset()
     
     g.eimu.writeMagSoftOffset0(self.A_1[0][0], self.A_1[0][1], self.A_1[0][2])
     g.eimu.writeMagSoftOffset1(self.A_1[1][0], self.A_1[1][1], self.A_1[1][2])
     g.eimu.writeMagSoftOffset2(self.A_1[2][0], self.A_1[2][1], self.A_1[2][2])
 
-    isSuccessful, mag_arr = g.eimu.readMagSoftOffset0()
-    A_mat[0][0] = round(mag_arr[0], 6)
-    A_mat[0][1] = round(mag_arr[1], 6)
-    A_mat[0][2] = round(mag_arr[2], 6)
-
-    isSuccessful, mag_arr = g.eimu.readMagSoftOffset1()
-    A_mat[1][0] = round(mag_arr[0], 6)
-    A_mat[1][1] = round(mag_arr[1], 6)
-    A_mat[1][2] = round(mag_arr[2], 6)
-
-    isSuccessful, mag_arr = g.eimu.readMagSoftOffset2()
-    A_mat[2][0] = round(mag_arr[0], 6)
-    A_mat[2][1] = round(mag_arr[1], 6)
-    A_mat[2][2] = round(mag_arr[2], 6)
+    A_mat[0][0], A_mat[0][1], A_mat[0][2] = g.eimu.readMagSoftOffset0()
+    A_mat[1][0], A_mat[1][1], A_mat[1][2] = g.eimu.readMagSoftOffset1()
+    A_mat[2][0], A_mat[2][1], A_mat[2][2] = g.eimu.readMagSoftOffset2()
+    
 
     ################################################
     
@@ -210,15 +198,9 @@ class MagCalibrateFrame(tb.Frame):
   def animate(self,i):
     try:
       if self.calibrated == False:
-        isSuccessful, mag_arr = g.eimu.readMagRaw()
-        mx = round(mag_arr[0], 6)
-        my = round(mag_arr[1], 6)
-        mz = round(mag_arr[2], 6)
+        mx, my, mz = g.eimu.readMagRaw()
       else:
-        isSuccessful, mag_arr = g.eimu.readMag()
-        mx = round(mag_arr[0], 6)
-        my = round(mag_arr[1], 6)
-        mz = round(mag_arr[2], 6)
+        mx, my, mz = g.eimu.readMag()
       
       self.magArray.append([mx,my,mz])
       self.mag_x.append(mx)

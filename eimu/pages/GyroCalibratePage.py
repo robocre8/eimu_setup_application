@@ -18,7 +18,7 @@ class GyroCalibrateFrame(tb.Frame):
     # intialize parameter
     self.start_process = False
     self.loop_count = 0
-    self.no_of_samples = 10000
+    self.no_of_samples = 1000
 
     isSuccessful = g.eimu.setWorldFrameId(1)
 
@@ -32,10 +32,7 @@ class GyroCalibrateFrame(tb.Frame):
     self.gyValFrame = tb.Frame(self)
     self.gzValFrame = tb.Frame(self)
 
-    isSuccessful, gyro_arr = g.eimu.readGyroOffset()
-    gx = round(gyro_arr[0], 6)
-    gy = round(gyro_arr[1], 6)
-    gz = round(gyro_arr[2], 6)
+    gx, gy, gz = g.eimu.readGyroOffset()
 
     self.gxText = tb.Label(self.gxValFrame, text="GX-OFFSET:", font=('Monospace',10, 'bold') ,bootstyle="danger")
     self.gxVal = tb.Label(self.gxValFrame, text=f'{gx}', font=('Monospace',10), bootstyle="dark")
@@ -105,31 +102,31 @@ class GyroCalibrateFrame(tb.Frame):
   def read_data(self):
     if self.start_process:
 
-      self.gxVal.configure(text="0.0")
-      self.gyVal.configure(text="0.0")
-      self.gzVal.configure(text="0.0")
+      try:
+        self.gxVal.configure(text="0.0")
+        self.gyVal.configure(text="0.0")
+        self.gzVal.configure(text="0.0")
 
-      isSuccessful, gyro_arr = g.eimu.readGyroRaw()
-      gx = round(gyro_arr[0], 6)
-      gy = round(gyro_arr[1], 6)
-      gz = round(gyro_arr[2], 6)
+        gx, gy, gz = g.eimu.readGyroRaw()
 
-      self.gyro_x.append(gx)
-      self.gyro_y.append(gy)
-      self.gyro_z.append(gz)
+        self.gyro_x.append(gx)
+        self.gyro_y.append(gy)
+        self.gyro_z.append(gz)
 
-      self.loop_count += 1
-      percent = (self.loop_count*100)/self.no_of_samples
-      self.textVal.configure(text=f'{percent} %')
-      self.progressBar['value'] = percent
-
-      if percent >= 100.0:
-        percent = 100.0
+        self.loop_count += 1
+        percent = (self.loop_count*100)/self.no_of_samples
         self.textVal.configure(text=f'{percent} %')
         self.progressBar['value'] = percent
-        self.plot_calibrated_data()
-      else:
-        self.canvas.after(1, self.read_data)
+
+        if percent >= 100.0:
+          percent = 100.0
+          self.textVal.configure(text=f'{percent} %')
+          self.progressBar['value'] = percent
+          self.plot_calibrated_data()
+        else:
+          self.canvas.after(10, self.read_data)
+      except:
+        pass
 
     else:
       self.reset_all_params()
@@ -150,10 +147,7 @@ class GyroCalibrateFrame(tb.Frame):
 
     g.eimu.writeGyroOffset(gx_offset, gy_offset, gz_offset)
 
-    isSuccessful, gyro_arr = g.eimu.readGyroOffset()
-    gx_offset = round(gyro_arr[0], 6)
-    gy_offset = round(gyro_arr[1], 6)
-    gz_offset = round(gyro_arr[2], 6)
+    gx_offset, gy_offset, gz_offset = g.eimu.readGyroOffset()
 
     self.gxVal.configure(text=f'{gx_offset}')
     self.gyVal.configure(text=f'{gy_offset}')

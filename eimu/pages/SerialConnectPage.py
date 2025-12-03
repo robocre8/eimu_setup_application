@@ -4,7 +4,7 @@ from ttkbootstrap.constants import *
 from ttkbootstrap.dialogs import Messagebox
 
 import serial.tools.list_ports
-from eimu.eimu_full import EIMU_FULL
+from eimu.eimu import EIMU
 
 import time
 
@@ -70,10 +70,10 @@ class SerialConnectFrame(tb.Frame):
 
   def connectToPort(self, port):
     try:
-      g.eimu = EIMU_FULL(port)
+      g.eimu = EIMU(port)
       time.sleep(4)
-      success, ref_frame_id = g.eimu.getWorldFrameId()
-      success = g.eimu.clearDataBuffer()
+      isSuccessful = g.eimu.clearDataBuffer()
+      frame_id = g.eimu.getWorldFrameId()
       return True
     except Exception as e: # Catching a general exception as a fallback
       print(f"An unexpected error occurred: {e}")

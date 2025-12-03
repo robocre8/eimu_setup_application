@@ -15,7 +15,7 @@ class AccVarianceFrame(tb.Frame):
     # intialize parameter
     self.start_process = False
     self.loop_count = 0
-    self.no_of_samples = 10000
+    self.no_of_samples = 1000
 
     g.eimu.setWorldFrameId(1)
 
@@ -29,10 +29,7 @@ class AccVarianceFrame(tb.Frame):
     self.ayValFrame = tb.Frame(self)
     self.azValFrame = tb.Frame(self)
 
-    isSuccessful, acc_arr = g.eimu.readAccVariance()
-    ax = round(acc_arr[0], 6)
-    ay = round(acc_arr[1], 6)
-    az = round(acc_arr[2], 6)
+    ax, ay, az = g.eimu.readAccVariance()
 
     self.axText = tb.Label(self.axValFrame, text="AX-VARIANCE:", font=('Monospace',10, 'bold') ,bootstyle="danger")
     self.axVal = tb.Label(self.axValFrame, text=f'{ax}', font=('Monospace',10), bootstyle="dark")
@@ -105,27 +102,27 @@ class AccVarianceFrame(tb.Frame):
       self.ayVal.configure(text="0.0")
       self.azVal.configure(text="0.0")
 
-      isSuccessful, acc_arr = g.eimu.readAcc()
-      accx_cal = round(acc_arr[0], 6)
-      accy_cal = round(acc_arr[1], 6)
-      accz_cal = round(acc_arr[2], 6)
+      try:
+        accx_cal, accy_cal, accz_cal = g.eimu.readAcc()
 
-      self.accx_arr.append(accx_cal)
-      self.accy_arr.append(accy_cal)
-      self.accz_arr.append(accz_cal)
+        self.accx_arr.append(accx_cal)
+        self.accy_arr.append(accy_cal)
+        self.accz_arr.append(accz_cal)
 
-      self.loop_count += 1
-      percent = (self.loop_count*100)/self.no_of_samples
-      self.textVal.configure(text=f'{percent} %')
-      self.progressBar['value'] = percent
-
-      if percent >= 100.0:
-        percent = 100.0
+        self.loop_count += 1
+        percent = (self.loop_count*100)/self.no_of_samples
         self.textVal.configure(text=f'{percent} %')
         self.progressBar['value'] = percent
-        self.print_computed_variance()
-      else:
-        self.canvas.after(1, self.read_cal_data)
+
+        if percent >= 100.0:
+          percent = 100.0
+          self.textVal.configure(text=f'{percent} %')
+          self.progressBar['value'] = percent
+          self.print_computed_variance()
+        else:
+          self.canvas.after(10, self.read_cal_data)
+      except:
+        pass
 
     else:
       self.reset_all_params()
@@ -139,10 +136,7 @@ class AccVarianceFrame(tb.Frame):
 
     g.eimu.writeAccVariance(accx_variance, accy_variance, accz_variance)
 
-    isSuccessful, acc_arr = g.eimu.readAccVariance()
-    accx_variance = round(acc_arr[0], 6)
-    accy_variance = round(acc_arr[1], 6)
-    accz_variance = round(acc_arr[2], 6)
+    accx_variance, accy_variance, accz_variance = g.eimu.readAccVariance()
 
     self.axVal.configure(text=f'{accx_variance}')
     self.ayVal.configure(text=f'{accy_variance}')
