@@ -43,6 +43,10 @@ READ_QUAT_RPY = 0x22
 READ_ACC_GYRO = 0x23
 CLEAR_DATA_BUFFER = 0x27
 READ_IMU_DATA = 0x28
+SET_ACC_LPF_CUT_FREQ = 0x29
+GET_ACC_LPF_CUT_FREQ = 0x2A
+READ_LIN_ACC_RAW = 0x2B
+READ_LIN_ACC = 0x2C
 #---------------------------------------------
 
 
@@ -233,6 +237,13 @@ class EIMU:
         r, p, y, ax, ay, az, gx, gy, gz = self.read_data9(READ_IMU_DATA)
         return round(r, 6), round(p, 6), round(y, 6), round(ax, 6), round(ay, 6), round(az, 6), round(gx, 6), round(gy, 6), round(gz, 6)
 
+    def readLinearAccRaw(self):
+        ax, ay, az = self.read_data3(READ_LIN_ACC_RAW)
+        return round(ax, 6), round(ay, 6), round(az, 6)
+    
+    def readLinearAcc(self):
+        ax, ay, az = self.read_data3(READ_LIN_ACC)
+        return round(ax, 6), round(ay, 6), round(az, 6)
     #---------------------------------------------------------------------
 
     def setI2cAddress(self, i2cAddress):
@@ -253,6 +264,15 @@ class EIMU:
         res = self.write_data1(SET_FILTER_GAIN, 100, gain)
         res = True if int(res) == 1 else False
         return res
+    
+    def setAccFilterCF(self, cf):
+        res = self.write_data1(SET_ACC_LPF_CUT_FREQ, 100, cf)
+        res = True if int(res) == 1 else False
+        return res
+    
+    def getAccFilterCF(self):
+        cf = self.read_data1(GET_ACC_LPF_CUT_FREQ, 100)
+        return round(cf, 3)
     
     def writeRPYVariance(self, r, p, y):
         self.write_data3(WRITE_RPY_VAR, r, p, y)

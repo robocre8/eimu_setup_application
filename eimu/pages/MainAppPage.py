@@ -6,6 +6,7 @@ from eimu.pages.MagCalibratePage import MagCalibrateFrame
 from eimu.pages.GyroCalibratePage import GyroCalibrateFrame
 from eimu.pages.AccCalibratePage import AccCalibrateFrame
 from eimu.pages.ImuVisualizePage import ImuVisualizeFrame
+from eimu.pages.AccFilterPage import AccFilterFrame
 from eimu.pages.OrientationVariancePage import OrientationVarianceFrame
 from eimu.pages.GyroVariancePage import GyroVarianceFrame 
 from eimu.pages.AccVariancePage import AccVarianceFrame 
@@ -45,20 +46,23 @@ class MainAppFrame(tb.Frame):
     self.button4 = tb.Button(self.sideNavFrame, text="VIZUALIZE IMU DATA", style=buttonStyleName,
                              command= lambda: self.displayPage(self.button4, self.displayImuVisualizePage))
     
-    self.button5 = tb.Button(self.sideNavFrame, text="RPY VARIANCE", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button5, self.displayOrientationVariancePage))
+    self.button5 = tb.Button(self.sideNavFrame, text="ACC FILTER", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button5, self.displayAccFilterPage))
     
-    self.button6 = tb.Button(self.sideNavFrame, text="GYRO VARIANCE", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button6, self.displayGyroVariancePage))
+    self.button6 = tb.Button(self.sideNavFrame, text="RPY VARIANCE", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button6, self.displayOrientationVariancePage))
     
-    self.button7 = tb.Button(self.sideNavFrame, text="ACC VARIANCE", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button7, self.displayAccVariancePage))
+    self.button7 = tb.Button(self.sideNavFrame, text="GYRO VARIANCE", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button7, self.displayGyroVariancePage))
     
-    self.button8 = tb.Button(self.sideNavFrame, text="I2C SETUP", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button8, self.displayI2CSetupPage))
+    self.button8 = tb.Button(self.sideNavFrame, text="ACC VARIANCE", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button8, self.displayAccVariancePage))
     
-    self.button9 = tb.Button(self.sideNavFrame, text="RESET PARAMS", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button9, self.displayResetPage))
+    self.button9 = tb.Button(self.sideNavFrame, text="I2C SETUP", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button9, self.displayI2CSetupPage))
+    
+    self.button10 = tb.Button(self.sideNavFrame, text="RESET PARAMS", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button10, self.displayResetPage))
     
     
     
@@ -70,16 +74,17 @@ class MainAppFrame(tb.Frame):
     self.button1.pack(side="top", fill="x", padx=5, pady=(0,5))
     self.button2.pack(side="top", fill="x", padx=5, pady=(0,5))
     self.button3.pack(side="top", fill="x", padx=5, pady=(0,30))
-    self.button4.pack(side="top", fill="x", padx=5, pady=(0,30))
-    self.button5.pack(side="top", fill="x", padx=5, pady=(0,5))
+    self.button4.pack(side="top", fill="x", padx=5, pady=(0,5))
+    self.button5.pack(side="top", fill="x", padx=5, pady=(0,30))
     self.button6.pack(side="top", fill="x", padx=5, pady=(0,5))
-    self.button7.pack(side="top", fill="x", padx=5, pady=(0,30))
-    self.button8.pack(side="top", fill="x", padx=5, pady=(0,5))
+    self.button7.pack(side="top", fill="x", padx=5, pady=(0,5))
+    self.button8.pack(side="top", fill="x", padx=5, pady=(0,30))
     self.button9.pack(side="top", fill="x", padx=5, pady=(0,5))
+    self.button10.pack(side="top", fill="x", padx=5, pady=(0,5))
 
     
     ############Initialize the mainContentFrame ################
-    self.displayPage(self.button9, self.displayResetPage)
+    self.displayPage(self.button10, self.displayResetPage)
     ############################################################
 
 
@@ -99,6 +104,7 @@ class MainAppFrame(tb.Frame):
     self.button7.configure(state="normal")
     self.button8.configure(state="normal")
     self.button9.configure(state="normal")
+    self.button10.configure(state="normal")
   
   def displayPage(self, button, page):
     self.enable_all_nav_buttons()
@@ -125,6 +131,10 @@ class MainAppFrame(tb.Frame):
   def displayImuVisualizePage(self):
     self.imuVisualizeFrame = ImuVisualizeFrame(self.mainContentFrame)
     self.imuVisualizeFrame.pack(side="left", expand=True, fill="both")
+
+  def displayAccFilterPage(self):
+    self.accFilterFrame = AccFilterFrame(self.mainContentFrame)
+    self.accFilterFrame.pack(side="left", expand=True, fill="both")
 
   def displayOrientationVariancePage(self):
     self.orientationVarianceFrame = OrientationVarianceFrame(self.mainContentFrame)
