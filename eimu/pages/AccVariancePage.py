@@ -103,7 +103,7 @@ class AccVarianceFrame(tb.Frame):
       self.azVal.configure(text="0.0")
 
       try:
-        accx_cal, accy_cal, accz_cal = g.eimu.readAcc()
+        accx_cal, accy_cal, accz_cal = g.eimu.readLinearAcc()
 
         self.accx_arr.append(accx_cal)
         self.accy_arr.append(accy_cal)
