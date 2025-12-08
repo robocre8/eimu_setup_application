@@ -8,3 +8,7 @@ class g():
   filterGain = None
   frameId = None
   frameList = ["NWU", "ENU", "NED"]
+
+  accFilterCF = None
+  coordList = ["x", "y", "z"]
+  coordNum = 0
