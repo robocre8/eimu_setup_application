@@ -26,6 +26,7 @@ class AccFilterFrame(tb.Frame):
 
     self.dataPoints = 50
     
+    isSuccessful = g.eimu.clearDataBuffer()
     isSuccessful = g.eimu.setWorldFrameId(1)
 
     self.label = tb.Label(self, text="FILTER ACC DATA", font=('Monospace',16, 'bold') ,bootstyle="dark")

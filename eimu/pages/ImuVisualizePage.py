@@ -32,7 +32,7 @@ class ImuVisualizeFrame(tb.Frame):
 
     # self.plot_elevation_angle = 60 
     # self.plot_horizontal_angle = 60
-    
+    isSuccessful = g.eimu.clearDataBuffer()
     isSuccessful = g.eimu.setWorldFrameId(1)
 
     self.label = tb.Label(self, text="VIZUALIZE IMU DATA", font=('Monospace',16, 'bold') ,bootstyle="dark")

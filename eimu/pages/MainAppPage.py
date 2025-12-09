@@ -2,9 +2,9 @@ import tkinter as tk
 import ttkbootstrap as tb
 from ttkbootstrap.constants import *
 
-from eimu.pages.MagCalibratePage import MagCalibrateFrame
 from eimu.pages.GyroCalibratePage import GyroCalibrateFrame
 from eimu.pages.AccCalibratePage import AccCalibrateFrame
+from eimu.pages.YawVelDriftComputePage import YawVelDriftComputeFrame
 from eimu.pages.ImuVisualizePage import ImuVisualizeFrame
 from eimu.pages.AccFilterPage import AccFilterFrame
 from eimu.pages.OrientationVariancePage import OrientationVarianceFrame
@@ -34,14 +34,14 @@ class MainAppFrame(tb.Frame):
     buttonStyle.configure(buttonStyleName, font=('Monospace',10, 'bold'))
 
     
-    self.button1 = tb.Button(self.sideNavFrame, text="MAG CALIBRATION", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button1, self.displayMagCalibratePage))
+    self.button1 = tb.Button(self.sideNavFrame, text="GYRO CALIBRATION", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button1, self.displayGyroCalibratePage))
     
-    self.button2 = tb.Button(self.sideNavFrame, text="GYRO CALIBRATION", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button2, self.displayGyroCalibratePage))
+    self.button2 = tb.Button(self.sideNavFrame, text="ACC CALIBRATION", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button2, self.displayAccCalibratePage))
     
-    self.button3 = tb.Button(self.sideNavFrame, text="ACC CALIBRATION", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button3, self.displayAccCalibratePage))
+    self.button3 = tb.Button(self.sideNavFrame, text="YAW VEL BIAS COMPUTE", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button3, self.displayYawVelDriftComputePage))
     
     self.button4 = tb.Button(self.sideNavFrame, text="VIZUALIZE IMU DATA", style=buttonStyleName,
                              command= lambda: self.displayPage(self.button4, self.displayImuVisualizePage))
@@ -116,10 +116,6 @@ class MainAppFrame(tb.Frame):
     for frame in self.mainContentFrame.winfo_children():
       frame.destroy()
 
-  def displayMagCalibratePage(self):
-    self.magCalibrateFrame = MagCalibrateFrame(self.mainContentFrame)
-    self.magCalibrateFrame.pack(side="left", expand=True, fill="both")
-
   def displayGyroCalibratePage(self):
     self.gyroCalibrateFrame = GyroCalibrateFrame(self.mainContentFrame)
     self.gyroCalibrateFrame.pack(side="left", expand=True, fill="both")
@@ -127,6 +123,10 @@ class MainAppFrame(tb.Frame):
   def displayAccCalibratePage(self):
     self.accCalibrateFrame = AccCalibrateFrame(self.mainContentFrame)
     self.accCalibrateFrame.pack(side="left", expand=True, fill="both")
+
+  def displayYawVelDriftComputePage(self):
+    self.yawVelDriftComputeFrame = YawVelDriftComputeFrame(self.mainContentFrame)
+    self.yawVelDriftComputeFrame.pack(side="left", expand=True, fill="both")
   
   def displayImuVisualizePage(self):
     self.imuVisualizeFrame = ImuVisualizeFrame(self.mainContentFrame)

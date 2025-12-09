@@ -22,16 +22,18 @@ READ_GYRO_OFF = 0x0D
 WRITE_GYRO_OFF = 0x0E
 READ_GYRO_VAR = 0x0F
 WRITE_GYRO_VAR = 0x10
-READ_MAG = 0x11
-READ_MAG_RAW = 0x12
-READ_MAG_H_OFF = 0x13
-WRITE_MAG_H_OFF = 0x14
-READ_MAG_S_OFF0 = 0x15
-WRITE_MAG_S_OFF0 = 0x16
-READ_MAG_S_OFF1 = 0x17
-WRITE_MAG_S_OFF1 = 0x18
-READ_MAG_S_OFF2 = 0x19
-WRITE_MAG_S_OFF2 = 0x1A
+
+# READ_MAG = 0x11
+# READ_MAG_RAW = 0x12
+# READ_MAG_H_OFF = 0x13
+# WRITE_MAG_H_OFF = 0x14
+# READ_MAG_S_OFF0 = 0x15
+# WRITE_MAG_S_OFF0 = 0x16
+# READ_MAG_S_OFF1 = 0x17
+# WRITE_MAG_S_OFF1 = 0x18
+# READ_MAG_S_OFF2 = 0x19
+# WRITE_MAG_S_OFF2 = 0x1A
+
 SET_I2C_ADDR = 0x1B
 GET_I2C_ADDR = 0x1C
 SET_FILTER_GAIN = 0x1D
@@ -41,6 +43,11 @@ GET_FRAME_ID = 0x20
 RESET_PARAMS = 0x21
 READ_QUAT_RPY = 0x22
 READ_ACC_GYRO = 0x23
+
+READ_YAW_WITH_DRIFT = 0x24
+READ_YAW_VEL_DRIFT_BIAS = 0x25
+WRITE_YAW_VEL_DRIFT_BIAS = 0x26
+
 CLEAR_DATA_BUFFER = 0x27
 READ_IMU_DATA = 0x28
 SET_ACC_LPF_CUT_FREQ = 0x29
@@ -225,10 +232,6 @@ class EIMU:
         gx, gy, gz = self.read_data3(READ_GYRO_VAR)
         return round(gx, 6), round(gy, 6), round(gz, 6)
     
-    def readMag(self):
-        mx, my, mz = self.read_data3(READ_MAG)
-        return round(mx, 6), round(my, 6), round(mz, 6)
-    
     def readAccGyro(self):
         ax, ay, az, gx, gy, gz = self.read_data6(READ_ACC_GYRO)
         return round(ax, 6), round(ay, 6), round(az, 6), round(gx, 6), round(gy, 6), round(gz, 6)
@@ -304,37 +307,18 @@ class EIMU:
     
     def writeGyroVariance(self, gx, gy, gz):
         self.write_data3(WRITE_GYRO_VAR, gx, gy, gz)
+
+    def readYawWithDrift(self):
+        yaw = self.read_data1(READ_YAW_WITH_DRIFT, 100)
+        return round(yaw, 6)
+ 
+    def readYawVelDriftBias(self):
+        yawVelBias = self.read_data1(READ_YAW_VEL_DRIFT_BIAS, 100)
+        return round(yawVelBias, 6)
     
-    def readMagRaw(self):
-        mx, my, mz = self.read_data3(READ_MAG_RAW)
-        return round(mx, 6), round(my, 6), round(mz, 6)
-    
-    def readMagHardOffset(self):
-        mx, my, mz = self.read_data3(READ_MAG_H_OFF)
-        return round(mx, 6), round(my, 6), round(mz, 6)
-    
-    def writeMagHardOffset(self, mx, my, mz):
-        self.write_data3(WRITE_MAG_H_OFF, mx, my, mz)
-    
-    def readMagSoftOffset0(self):
-        mx, my, mz = self.read_data3(READ_MAG_S_OFF0)
-        return round(mx, 6), round(my, 6), round(mz, 6)
-    
-    def writeMagSoftOffset0(self, mx, my, mz):
-        self.write_data3(WRITE_MAG_S_OFF0, mx, my, mz)
-    
-    def readMagSoftOffset1(self):
-        mx, my, mz = self.read_data3(READ_MAG_S_OFF1)
-        return round(mx, 6), round(my, 6), round(mz, 6)
-    
-    def writeMagSoftOffset1(self, mx, my, mz):
-        self.write_data3(WRITE_MAG_S_OFF1, mx, my, mz)
-    
-    def readMagSoftOffset2(self):
-        mx, my, mz = self.read_data3(READ_MAG_S_OFF2)
-        return round(mx, 6), round(my, 6), round(mz, 6)
-    
-    def writeMagSoftOffset2(self, mx, my, mz):
-        self.write_data3(WRITE_MAG_S_OFF2, mx, my, mz)
+    def writeYawVelDriftBias(self, val):
+        res = self.write_data1(WRITE_YAW_VEL_DRIFT_BIAS, 100, val)
+        res = True if int(res) == 1 else False
+        return res
     
     #---------------------------------------------------------------------
