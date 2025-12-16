@@ -30,19 +30,23 @@ class ImuVisualizeFrame(tb.Frame):
 
     self.sensor_axis_line_width = str(4.0)
 
+    g.eimu.setWorldFrameId(1)
+
     # self.plot_elevation_angle = 60 
     # self.plot_horizontal_angle = 60
-    
-    isSuccessful = g.eimu.setWorldFrameId(1)
 
     self.label = tb.Label(self, text="VIZUALIZE IMU DATA", font=('Monospace',16, 'bold') ,bootstyle="dark")
   
     #create widgets to be added to the Fame
-    g.frameId = g.eimu.getWorldFrameId()
+    success, frameId = g.eimu.getWorldFrameId()
+    if success:
+      g.frameId = frameId
     self.selectFrameId = SelectValueFrame(self, keyTextInit=f"REFERENCE_FRAME: ", valTextInit=g.frameList[g.frameId],
                                           initialComboValues=g.frameList, middileware_func=self.selectFrameIdFunc )
     
-    g.filterGain = g.eimu.getFilterGain()
+    success, filterGain = g.eimu.getFilterGain()
+    if success:
+      g.filterGain = filterGain
     self.setFilterGain = SetValueFrame(self, keyTextInit="FILTER_GAIN: ", valTextInit=g.filterGain,
                                 middleware_func=self.setFilterGainFunc)
     
@@ -71,7 +75,9 @@ class ImuVisualizeFrame(tb.Frame):
     self.gyValFrame = tb.Frame(self.angularVelValFrame)
     self.gzValFrame = tb.Frame(self.angularVelValFrame)
 
-    r, p, y, ax, ay, az, gx, gy, gz = g.eimu.readImuData()
+    success, r, p, y, ax, ay, az, gx, gy, gz = g.eimu.readImuData()
+    if not success:
+      print("Error Occured while reading Initial Imu Data")
 
     self.rText = tb.Label(self.rValFrame, text="R:", font=('Monospace',10, 'bold') ,bootstyle="danger")
     self.rVal = tb.Label(self.rValFrame, text=f'{r}', font=('Monospace',10), bootstyle="dark")
@@ -158,39 +164,33 @@ class ImuVisualizeFrame(tb.Frame):
 
 
   def setFilterGainFunc(self, text):
-    try:
-      if text:
-        isSuccessful = g.eimu.setFilterGain(float(text))
-        g.filterGain = g.eimu.getFilterGain()
-    except:
-      pass
+    if text:
+      g.eimu.setFilterGain(float(text))
+      success, filterGain = g.eimu.getFilterGain()
+      if success:
+        g.filterGain = filterGain
   
     return g.filterGain
   
 
-  # def selectFrameIdFunc(self, frame_val_str):
-  #   try:
-  #     if frame_val_str:
-  #       isSuccessful = g.eimu.clearDataBuffer()
-        
-  #       if frame_val_str == g.frameList[0]:
-  #         isSuccessful = g.eimu.setWorldFrameId(0)
-          
-  #       elif frame_val_str == g.frameList[1]:
-  #         isSuccessful = g.eimu.setWorldFrameId(1)
-        
-  #       elif frame_val_str == g.frameList[2]:
-  #         isSuccessful = g.eimu.setWorldFrameId(2)
-
-  #   except:
-  #     pass
-
-  #   g.frameId = g.eimu.getWorldFrameId()
-  #   return g.frameList[g.frameId]
-
-
   def selectFrameIdFunc(self, frame_val_str):
-    g.frameId = g.eimu.getWorldFrameId()
+    if frame_val_str:
+      
+      if frame_val_str == g.frameList[0]:
+        success = g.eimu.clearDataBuffer()
+        g.eimu.setWorldFrameId(0)
+        
+      elif frame_val_str == g.frameList[1]:
+        success = g.eimu.clearDataBuffer()
+        g.eimu.setWorldFrameId(1)
+      
+      elif frame_val_str == g.frameList[2]:
+        success = g.eimu.clearDataBuffer()
+        g.eimu.setWorldFrameId(2)
+
+    success, frameId = g.eimu.getWorldFrameId()
+    if success:
+      g.frameId = frameId
     return g.frameList[g.frameId]
 
 
@@ -200,82 +200,81 @@ class ImuVisualizeFrame(tb.Frame):
 
 
   def animate(self,i):
-    try:
-      r, p, y, ax, ay, az, gx, gy, gz = g.eimu.readImuData()
+
+      success, r, p, y, ax, ay, az, gx, gy, gz = g.eimu.readImuData()
       
-      self.rVal.configure(text=f"{r}")
-      self.pVal.configure(text=f"{p}")
-      self.yVal.configure(text=f"{y}")
-      
-      self.axVal.configure(text=f"{ax}")
-      self.ayVal.configure(text=f"{ay}")
-      self.azVal.configure(text=f"{az}")
-      
-      self.gxVal.configure(text=f"{gx}")
-      self.gyVal.configure(text=f"{gy}")
-      self.gzVal.configure(text=f"{gz}")
-
-      #-----------------------------------------------------------------------
-      ##### convert rpy to DCM #####################
-      DCM = [[np.cos(p)*np.cos(y), np.cos(p)*np.sin(y), -1.0*np.sin(p)], # cθcψ, cθsψ, −sθ
-             [(np.sin(r)*np.sin(p)*np.cos(y)) - (np.cos(r)*np.sin(y)), (np.sin(r)*np.sin(p)*np.sin(y)) + (np.cos(r)*np.cos(y)), np.sin(r)*np.cos(p)], # sϕsθcψ - cϕsψ, sϕsθsψ + cϕcψ, sϕcθ
-             [(np.cos(r)*np.sin(p)*np.cos(y)) + (np.sin(r)*np.sin(y)), (np.cos(r)*np.sin(p)*np.sin(y)) - (np.sin(r)*np.cos(y)), np.cos(r)*np.cos(p)]] # cϕsθcψ + sϕsψ, cϕsθsψ - sϕcψ, cϕcθ
-      
-      ##### get the IMU sensor coordinate vector from the DCM #####################
-      x_vect = DCM[0]
-      y_vect = DCM[1]
-      z_vect = DCM[2]
-      #----------------------------------------------------------------------
-
-
-
-      # Clear all axis
-      self.ax.cla()
-      
-      self.ax.set_xlim(-1.0, 1.0)
-      self.ax.set_ylim(-1.0, 1.0)
-      self.ax.set_zlim(-1.0, 1.0)
-      self.ax.grid(False)
-      # self.ax.view_init(self.plot_elevation_angle, self.plot_horizontal_angle)
-      
-      # defining world axes
-      x0 = [0, 1]
-      x1 = [0, 0]
-      x2 = [0, 0]  
-      self.ax.plot(x0, x1, x2, c=self.world_axis_x_color, lw=self.world_axis_line_width)
-
-      y0 = [0, 0]
-      y1 = [0, 1]
-      y2 = [0, 0]  
-      self.ax.plot(y0, y1, y2, c=self.world_axis_y_color, lw=self.world_axis_line_width)
-
-      z0 = [0, 0]
-      z1 = [0, 0]
-      z2 = [0, 1]  
-      self.ax.plot(z0, z1, z2, c=self.world_axis_z_color, lw=self.world_axis_line_width)
-
-
-      # defining sensor axes
-      x0 = [0, x_vect[0]]
-      x1 = [0, x_vect[1]]
-      x2 = [0, x_vect[2]]  
-      self.ax.plot(x0, x1, x2, c=self.sensor_axis_x_color, lw=self.sensor_axis_line_width)
-
-      y0 = [0, y_vect[0]]
-      y1 = [0, y_vect[1]]
-      y2 = [0, y_vect[2]]  
-      self.ax.plot(y0, y1, y2, c=self.sensor_axis_y_color, lw=self.sensor_axis_line_width)
-
-      z0 = [0, z_vect[0]]
-      z1 = [0, z_vect[1]]
-      z2 = [0, z_vect[2]]  
-      self.ax.plot(z0, z1, z2, c=self.sensor_axis_z_color, lw=self.sensor_axis_line_width)
+      if success:
+        self.rVal.configure(text=f"{r}")
+        self.pVal.configure(text=f"{p}")
+        self.yVal.configure(text=f"{y}")
         
+        self.axVal.configure(text=f"{ax}")
+        self.ayVal.configure(text=f"{ay}")
+        self.azVal.configure(text=f"{az}")
         
-    ##    # Pause the plot for INTERVAL seconds 
-    ##    plt.pause(INTERVAL)
-    except:
-      pass
+        self.gxVal.configure(text=f"{gx}")
+        self.gyVal.configure(text=f"{gy}")
+        self.gzVal.configure(text=f"{gz}")
+
+        #-----------------------------------------------------------------------
+        ##### convert rpy to DCM #####################
+        DCM = [[np.cos(p)*np.cos(y), np.cos(p)*np.sin(y), -1.0*np.sin(p)], # cθcψ, cθsψ, −sθ
+              [(np.sin(r)*np.sin(p)*np.cos(y)) - (np.cos(r)*np.sin(y)), (np.sin(r)*np.sin(p)*np.sin(y)) + (np.cos(r)*np.cos(y)), np.sin(r)*np.cos(p)], # sϕsθcψ - cϕsψ, sϕsθsψ + cϕcψ, sϕcθ
+              [(np.cos(r)*np.sin(p)*np.cos(y)) + (np.sin(r)*np.sin(y)), (np.cos(r)*np.sin(p)*np.sin(y)) - (np.sin(r)*np.cos(y)), np.cos(r)*np.cos(p)]] # cϕsθcψ + sϕsψ, cϕsθsψ - sϕcψ, cϕcθ
+        
+        ##### get the IMU sensor coordinate vector from the DCM #####################
+        x_vect = DCM[0]
+        y_vect = DCM[1]
+        z_vect = DCM[2]
+        #----------------------------------------------------------------------
+
+
+
+        # Clear all axis
+        self.ax.cla()
+        
+        self.ax.set_xlim(-1.0, 1.0)
+        self.ax.set_ylim(-1.0, 1.0)
+        self.ax.set_zlim(-1.0, 1.0)
+        self.ax.grid(False)
+        # self.ax.view_init(self.plot_elevation_angle, self.plot_horizontal_angle)
+        
+        # defining world axes
+        x0 = [0, 1]
+        x1 = [0, 0]
+        x2 = [0, 0]  
+        self.ax.plot(x0, x1, x2, c=self.world_axis_x_color, lw=self.world_axis_line_width)
+
+        y0 = [0, 0]
+        y1 = [0, 1]
+        y2 = [0, 0]  
+        self.ax.plot(y0, y1, y2, c=self.world_axis_y_color, lw=self.world_axis_line_width)
+
+        z0 = [0, 0]
+        z1 = [0, 0]
+        z2 = [0, 1]  
+        self.ax.plot(z0, z1, z2, c=self.world_axis_z_color, lw=self.world_axis_line_width)
+
+
+        # defining sensor axes
+        x0 = [0, x_vect[0]]
+        x1 = [0, x_vect[1]]
+        x2 = [0, x_vect[2]]  
+        self.ax.plot(x0, x1, x2, c=self.sensor_axis_x_color, lw=self.sensor_axis_line_width)
+
+        y0 = [0, y_vect[0]]
+        y1 = [0, y_vect[1]]
+        y2 = [0, y_vect[2]]  
+        self.ax.plot(y0, y1, y2, c=self.sensor_axis_y_color, lw=self.sensor_axis_line_width)
+
+        z0 = [0, z_vect[0]]
+        z1 = [0, z_vect[1]]
+        z2 = [0, z_vect[2]]  
+        self.ax.plot(z0, z1, z2, c=self.sensor_axis_z_color, lw=self.sensor_axis_line_width)
+          
+          
+        ##    # Pause the plot for INTERVAL seconds 
+        ##    plt.pause(INTERVAL)
 
 
   def runVisualization(self):

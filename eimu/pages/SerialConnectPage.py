@@ -70,13 +70,14 @@ class SerialConnectFrame(tb.Frame):
 
   def connectToPort(self, port):
     try:
-      g.eimu = EIMU(port)
+      g.eimu = EIMU()
+      g.eimu.connect(port)
       time.sleep(4)
-      isSuccessful = g.eimu.clearDataBuffer()
-      frame_id = g.eimu.getWorldFrameId()
+      success = g.eimu.clearDataBuffer()
+      g.eimu.setWorldFrameId(1)
+      success, frame_id = g.eimu.getWorldFrameId()
       return True
-    except Exception as e: # Catching a general exception as a fallback
-      print(f"An unexpected error occurred: {e}")
+    except:
       return False
 
   

@@ -29,7 +29,9 @@ class OrientationVarianceFrame(tb.Frame):
     self.pValFrame = tb.Frame(self)
     self.yValFrame = tb.Frame(self)
 
-    r, p, y = g.eimu.readRPYVariance()
+    success, r, p, y = g.eimu.readRPYVariance()
+    if not success:
+      print("Error Occured While Reading Initial Orientation Variance Values")
 
     self.rText = tb.Label(self.rValFrame, text="R-VARIANCE:", font=('Monospace',10, 'bold') ,bootstyle="danger")
     self.rVal = tb.Label(self.rValFrame, text=f'{r}', font=('Monospace',10), bootstyle="dark")
@@ -102,8 +104,8 @@ class OrientationVarianceFrame(tb.Frame):
       self.pVal.configure(text="0.0")
       self.yVal.configure(text="0.0")
 
-      try:
-        r, p, y = g.eimu.readRPY()
+      success, r, p, y = g.eimu.readRPY()
+      if success:
         self.r_arr.append(r)
         self.p_arr.append(p)
         self.y_arr.append(y)
@@ -120,10 +122,6 @@ class OrientationVarianceFrame(tb.Frame):
           self.print_computed_variance()
         else:
           self.canvas.after(10, self.read_cal_data)
-      except:
-        pass
-
-      
 
     else:
       self.reset_all_params()
@@ -137,7 +135,9 @@ class OrientationVarianceFrame(tb.Frame):
 
     g.eimu.writeRPYVariance(r_variance, p_variance, y_variance)
 
-    r_variance, p_variance, y_variance = g.eimu.readRPYVariance()
+    success, r_variance, p_variance, y_variance = g.eimu.readRPYVariance()
+    if not success:
+      print("Error Occured While Reading Final Orientation Variance Values")
 
     self.rVal.configure(text=f'{r_variance}')
     self.pVal.configure(text=f'{p_variance}')

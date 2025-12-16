@@ -20,7 +20,7 @@ class GyroCalibrateFrame(tb.Frame):
     self.loop_count = 0
     self.no_of_samples = 1000
 
-    isSuccessful = g.eimu.setWorldFrameId(1)
+    g.eimu.setWorldFrameId(1)
 
     self.gyro_x = deque(maxlen=self.no_of_samples)
     self.gyro_y = deque(maxlen=self.no_of_samples)
@@ -32,7 +32,9 @@ class GyroCalibrateFrame(tb.Frame):
     self.gyValFrame = tb.Frame(self)
     self.gzValFrame = tb.Frame(self)
 
-    gx, gy, gz = g.eimu.readGyroOffset()
+    success, gx, gy, gz = g.eimu.readGyroOffset()
+    if not success:
+      print("Error Occured while reading Initial Gyro Offset Values")
 
     self.gxText = tb.Label(self.gxValFrame, text="GX-OFFSET:", font=('Monospace',10, 'bold') ,bootstyle="danger")
     self.gxVal = tb.Label(self.gxValFrame, text=f'{gx}', font=('Monospace',10), bootstyle="dark")
@@ -102,13 +104,13 @@ class GyroCalibrateFrame(tb.Frame):
   def read_data(self):
     if self.start_process:
 
-      try:
-        self.gxVal.configure(text="0.0")
-        self.gyVal.configure(text="0.0")
-        self.gzVal.configure(text="0.0")
+      self.gxVal.configure(text="0.0")
+      self.gyVal.configure(text="0.0")
+      self.gzVal.configure(text="0.0")
 
-        gx, gy, gz = g.eimu.readGyroRaw()
+      success, gx, gy, gz = g.eimu.readGyroRaw()
 
+      if success:
         self.gyro_x.append(gx)
         self.gyro_y.append(gy)
         self.gyro_z.append(gz)
@@ -125,8 +127,6 @@ class GyroCalibrateFrame(tb.Frame):
           self.plot_calibrated_data()
         else:
           self.canvas.after(10, self.read_data)
-      except:
-        pass
 
     else:
       self.reset_all_params()
@@ -147,7 +147,9 @@ class GyroCalibrateFrame(tb.Frame):
 
     g.eimu.writeGyroOffset(gx_offset, gy_offset, gz_offset)
 
-    gx_offset, gy_offset, gz_offset = g.eimu.readGyroOffset()
+    success, gx_offset, gy_offset, gz_offset = g.eimu.readGyroOffset()
+    if not success:
+      print("Error Occured while reading Final Gyro Offset Values")
 
     self.gxVal.configure(text=f'{gx_offset}')
     self.gyVal.configure(text=f'{gy_offset}')

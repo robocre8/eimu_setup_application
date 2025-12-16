@@ -29,7 +29,9 @@ class AccVarianceFrame(tb.Frame):
     self.ayValFrame = tb.Frame(self)
     self.azValFrame = tb.Frame(self)
 
-    ax, ay, az = g.eimu.readAccVariance()
+    success, ax, ay, az = g.eimu.readAccVariance()
+    if not success:
+      print("Error Occured While Reading Initial Acc Variance Values")
 
     self.axText = tb.Label(self.axValFrame, text="AX-VARIANCE:", font=('Monospace',10, 'bold') ,bootstyle="danger")
     self.axVal = tb.Label(self.axValFrame, text=f'{ax}', font=('Monospace',10), bootstyle="dark")
@@ -102,9 +104,8 @@ class AccVarianceFrame(tb.Frame):
       self.ayVal.configure(text="0.0")
       self.azVal.configure(text="0.0")
 
-      try:
-        accx_cal, accy_cal, accz_cal = g.eimu.readLinearAcc()
-
+      success, accx_cal, accy_cal, accz_cal = g.eimu.readLinearAcc()
+      if success:
         self.accx_arr.append(accx_cal)
         self.accy_arr.append(accy_cal)
         self.accz_arr.append(accz_cal)
@@ -121,8 +122,6 @@ class AccVarianceFrame(tb.Frame):
           self.print_computed_variance()
         else:
           self.canvas.after(10, self.read_cal_data)
-      except:
-        pass
 
     else:
       self.reset_all_params()
@@ -136,7 +135,9 @@ class AccVarianceFrame(tb.Frame):
 
     g.eimu.writeAccVariance(accx_variance, accy_variance, accz_variance)
 
-    accx_variance, accy_variance, accz_variance = g.eimu.readAccVariance()
+    success, accx_variance, accy_variance, accz_variance = g.eimu.readAccVariance()
+    if not success:
+      print("Error Occured While Reading Final Acc Variance Values")
 
     self.axVal.configure(text=f'{accx_variance}')
     self.ayVal.configure(text=f'{accy_variance}')
