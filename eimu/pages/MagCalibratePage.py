@@ -31,7 +31,7 @@ class MagCalibrateFrame(tb.Frame):
     self.calibrated = False
     self.HISTORY_SIZE = 10000
 
-    isSuccessful = g.eimu.setWorldFrameId(1)
+    g.eimu.setWorldFrameId(1)
 
     self.fig, self.ax = None, None
     
@@ -74,15 +74,20 @@ class MagCalibrateFrame(tb.Frame):
     
     g.eimu.writeMagHardOffset(self.b[0][0], self.b[1][0], self.b[2][0])
 
-    b_vect[0][0], b_vect[1][0], b_vect[2][0] = g.eimu.readMagHardOffset()
+    success, b_vect[0][0], b_vect[1][0], b_vect[2][0] = g.eimu.readMagHardOffset()
+    if not success:
+      print("Error Occured while reading Mag Hard Iron Offset Values")
     
     g.eimu.writeMagSoftOffset0(self.A_1[0][0], self.A_1[0][1], self.A_1[0][2])
     g.eimu.writeMagSoftOffset1(self.A_1[1][0], self.A_1[1][1], self.A_1[1][2])
     g.eimu.writeMagSoftOffset2(self.A_1[2][0], self.A_1[2][1], self.A_1[2][2])
 
-    A_mat[0][0], A_mat[0][1], A_mat[0][2] = g.eimu.readMagSoftOffset0()
-    A_mat[1][0], A_mat[1][1], A_mat[1][2] = g.eimu.readMagSoftOffset1()
-    A_mat[2][0], A_mat[2][1], A_mat[2][2] = g.eimu.readMagSoftOffset2()
+    success0, A_mat[0][0], A_mat[0][1], A_mat[0][2] = g.eimu.readMagSoftOffset0()
+    success1, A_mat[1][0], A_mat[1][1], A_mat[1][2] = g.eimu.readMagSoftOffset1()
+    success2, A_mat[2][0], A_mat[2][1], A_mat[2][2] = g.eimu.readMagSoftOffset2()
+
+    if not (success0 and success1 and success2):
+      print("Error Occured while reading Mag Soft Iron Offset Values")
     
 
     ################################################
@@ -196,12 +201,12 @@ class MagCalibrateFrame(tb.Frame):
 
       
   def animate(self,i):
-    try:
-      if self.calibrated == False:
-        mx, my, mz = g.eimu.readMagRaw()
-      else:
-        mx, my, mz = g.eimu.readMag()
-      
+    if self.calibrated == False:
+      success, mx, my, mz = g.eimu.readMagRaw()
+    else:
+      success, mx, my, mz = g.eimu.readMag()
+    
+    if success:
       self.magArray.append([mx,my,mz])
       self.mag_x.append(mx)
       self.mag_y.append(my)
@@ -215,10 +220,8 @@ class MagCalibrateFrame(tb.Frame):
       self.ax.scatter(self.mag_y, self.mag_z, color='g')
       self.ax.scatter(self.mag_z, self.mag_x, color='b')
       
-      if len(self.mag_x) == self.HISTORY_SIZE:
-        self.anim.event_source.stop()
-    except:
-      pass
+    if len(self.mag_x) == self.HISTORY_SIZE:
+      self.anim.event_source.stop()
     
 
   def runCalibration(self):

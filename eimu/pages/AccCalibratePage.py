@@ -20,7 +20,7 @@ class AccCalibrateFrame(tb.Frame):
     self.loop_count = 0
     self.no_of_samples = 1000
 
-    isSuccessful = g.eimu.setWorldFrameId(1)
+    g.eimu.setWorldFrameId(1)
 
     self.acc_x = deque(maxlen=self.no_of_samples)
     self.acc_y = deque(maxlen=self.no_of_samples)
@@ -32,7 +32,9 @@ class AccCalibrateFrame(tb.Frame):
     self.ayValFrame = tb.Frame(self)
     self.azValFrame = tb.Frame(self)
 
-    ax, ay, az = g.eimu.readAccOffset()
+    success, ax, ay, az = g.eimu.readAccOffset()
+    if not success:
+      print("Error Occured While Reading Initial Acc Offset Values")
 
     self.axText = tb.Label(self.axValFrame, text="AX-OFFSET:", font=('Monospace',10, 'bold') ,bootstyle="danger")
     self.axVal = tb.Label(self.axValFrame, text=f'{ax}', font=('Monospace',10), bootstyle="dark")
@@ -106,9 +108,9 @@ class AccCalibrateFrame(tb.Frame):
       self.ayVal.configure(text="0.0")
       self.azVal.configure(text="0.0")
 
-      try:
-        ax, ay, az = g.eimu.readAccRaw()
+      success, ax, ay, az = g.eimu.readAccRaw()
 
+      if success:
         self.acc_x.append(ax)
         self.acc_y.append(ay)
         self.acc_z.append(az)
@@ -125,8 +127,6 @@ class AccCalibrateFrame(tb.Frame):
           self.plot_calibrated_data()
         else:
           self.canvas.after(10, self.read_data)
-      except:
-        pass
 
     else:
       self.reset_all_params()
@@ -139,7 +139,10 @@ class AccCalibrateFrame(tb.Frame):
 
     g.eimu.writeAccOffset(ax_offset, ay_offset, az_offset)
 
-    ax_offset, ay_offset, az_offset = g.eimu.readAccOffset()
+    success, ax_offset, ay_offset, az_offset = g.eimu.readAccOffset()
+
+    if not success:
+      print("Error Occured While Reading Final Acc Offset Values")
 
     self.axVal.configure(text=f'{ax_offset}')
     self.ayVal.configure(text=f'{ay_offset}')

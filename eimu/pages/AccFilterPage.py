@@ -16,17 +16,16 @@ class AccFilterFrame(tb.Frame):
   def __init__(self, parentFrame):
     super().__init__(master=parentFrame)
 
-    self.fig, self.ax = None, None
+    self.fig, self.axes = None, None
 
     self.ylim = [-2, 2]
 
-    self.axDataList = []
-    self.ayDataList = []
-    self.azDataList = []
+    self.accRawDataList = []
+    self.accFiltDataList = []
 
     self.dataPoints = 50
     
-    isSuccessful = g.eimu.setWorldFrameId(1)
+    g.eimu.setWorldFrameId(1)
 
     self.label = tb.Label(self, text="FILTER ACC DATA", font=('Monospace',16, 'bold') ,bootstyle="dark")
 
@@ -34,7 +33,9 @@ class AccFilterFrame(tb.Frame):
     self.selectCoord = SelectValueFrame(self, keyTextInit=f"CO-ORDINATE: ", valTextInit=g.coordList[g.coordNum],
                                           initialComboValues=g.coordList, middileware_func=self.selectCoordFunc )
     
-    g.accFilterCF = g.eimu.getAccFilterCF()
+    success, accFilterCF = g.eimu.getAccFilterCF()
+    if success:
+      g.accFilterCF = accFilterCF
     self.setAccFilterCFFrame = SetValueFrame(self, keyTextInit="ACC_LPF_CF: ", valTextInit=g.accFilterCF,
                                 middleware_func=self.setAccFilterCFFunc)
     
@@ -53,7 +54,9 @@ class AccFilterFrame(tb.Frame):
     self.ayValFrame = tb.Frame(self.accelerationValFrame)
     self.azValFrame = tb.Frame(self.accelerationValFrame)
 
-    ax, ay, az = g.eimu.readLinearAcc()
+    success, ax, ay, az = g.eimu.readLinearAcc()
+    if not success:
+      print("Error Occured while reading Initial Linear Acceleration Data")
 
     self.axText = tb.Label(self.axValFrame, text="AX:", font=('Monospace',10, 'bold') ,bootstyle="danger")
     self.axVal = tb.Label(self.axValFrame, text=f'{ax}', font=('Monospace',10), bootstyle="dark")
@@ -93,29 +96,24 @@ class AccFilterFrame(tb.Frame):
   
 
   def setAccFilterCFFunc(self, text):
-    try:
-      if text:
-        isSuccessful = g.eimu.setAccFilterCF(float(text))
-        g.accFilterCF = g.eimu.getAccFilterCF()
-    except:
-      pass
+    if text:
+      g.eimu.setAccFilterCF(float(text))
+      success, accFilterCF = g.eimu.getAccFilterCF()
+      if success:
+        g.accFilterCF = accFilterCF
   
     return g.accFilterCF
   
 
   def selectCoordFunc(self, coord_val_str):
-    try:
-      if coord_val_str == g.coordList[0]:
-        g.coordNum = 0
-        
-      elif coord_val_str == g.coordList[1]:
-        g.coordNum = 1
+    if coord_val_str == g.coordList[0]:
+      g.coordNum = 0
       
-      elif coord_val_str == g.coordList[2]:
-        g.coordNum = 2
-
-    except:
-      pass
+    elif coord_val_str == g.coordList[1]:
+      g.coordNum = 1
+    
+    elif coord_val_str == g.coordList[2]:
+      g.coordNum = 2
 
     return g.coordList[g.coordNum]
 
@@ -126,78 +124,70 @@ class AccFilterFrame(tb.Frame):
 
 
   def animate(self,i):
-    try:
 
-      ax_raw, ay_raw, az_raw = g.eimu.readLinearAccRaw()
-      ax, ay, az = g.eimu.readLinearAcc()
+    success0, ax_raw, ay_raw, az_raw = g.eimu.readLinearAccRaw()
+    success1, ax, ay, az = g.eimu.readLinearAcc()
+
+    if success0 and success1:
 
       self.axVal.configure(text=f"{ax}")
       self.ayVal.configure(text=f"{ay}")
       self.azVal.configure(text=f"{az}")
 
       if g.coordNum==0:
-        self.axDataList.append(ax_raw)
-        self.ayDataList.append(ax)
+        self.accRawDataList.append(ax_raw)
+        self.accFiltDataList.append(ax)
       elif g.coordNum==1:
-        self.axDataList.append(ay_raw)
-        self.ayDataList.append(ay)
+        self.accRawDataList.append(ay_raw)
+        self.accFiltDataList.append(ay)
       elif g.coordNum==2:
-        self.axDataList.append(az_raw)
-        self.ayDataList.append(az)
-
-      # self.azDataList.append(az)
+        self.accRawDataList.append(az_raw)
+        self.accFiltDataList.append(az)
 
       # Fix the list size so that the animation plot 'window' is x number of points
 
-      axDataList = self.axDataList[-self.dataPoints:]
-      ayDataList = self.ayDataList[-self.dataPoints:]
-      # azDataList = self.azDataList[-self.dataPoints:]
+      accRawDataList = self.accRawDataList[-self.dataPoints:]
+      accFiltDataList = self.accFiltDataList[-self.dataPoints:]
       
-      self.ax.clear()
+      self.axes.clear()
       if g.coordNum==0:
-        self.ax.plot(axDataList, color="darkcyan")
-        self.ax.plot(ayDataList, color="red")
+        self.axes.plot(accRawDataList, color="darkcyan")
+        self.axes.plot(accFiltDataList, color="red")
       elif g.coordNum==1:
-        self.ax.plot(axDataList, color="darkorange")
-        self.ax.plot(ayDataList, color="green")
+        self.axes.plot(accRawDataList, color="darkorange")
+        self.axes.plot(accFiltDataList, color="green")
       elif g.coordNum==2:
-        self.ax.plot(axDataList, color="tomato")
-        self.ax.plot(ayDataList, color="blue")
+        self.axes.plot(accRawDataList, color="tomato")
+        self.axes.plot(accFiltDataList, color="blue")
       
       # self.ax.plot(azDataList)
       
-      self.ax.grid(which = "major", linewidth = 0.5)
-      self.ax.grid(which = "minor", linewidth = 0.2)
-      self.ax.minorticks_on()
+      self.axes.grid(which = "major", linewidth = 0.5)
+      self.axes.grid(which = "minor", linewidth = 0.2)
+      self.axes.minorticks_on()
 
-      self.ax.set_ylim(self.ylim) # Set Y axis limit of plot
-      self.ax.set_title("Acceleration Data") # Set title of figure
-      self.ax.set_ylabel("linear acceleration in m/s^2") # Set title of y axis 
-      self.ax.set_xlabel("number of data points") # Set title of z axis 
-
-      # self.ax.legend(["ax", "ay", "az"], loc ="upper right")
-      self.ax.legend(["unfiltered", "filtered"], loc ="upper right")
+      self.axes.set_ylim(self.ylim) # Set Y axis limit of plot
+      self.axes.set_title(f'Linear Acceleration {g.coordList[g.coordNum]} Data') # Set title of figure
+      self.axes.set_ylabel("linear acceleration in m/s^2") # Set title of y axis 
+      self.axes.set_xlabel("number of data points") # Set title of z axis 
+      self.axes.legend(["unfiltered", "filtered"], loc ="upper right")
 
         
         
     ##    # Pause the plot for INTERVAL seconds 
     ##    plt.pause(INTERVAL)
-    except:
-      print ("Error Readind Acc Data")
-      pass
 
 
   def runVisualization(self):
     
     self.fig = plt.figure()
-    self.ax = self.fig.add_subplot(111)
+    self.axes = self.fig.add_subplot(111)
 
-    self.ax.set_ylim(self.ylim) # Set Y axis limit of plot
-    self.ax.set_title("Acceleration Data") # Set title of figure
-    self.ax.set_ylabel("linear acceleration in m/s^2") # Set title of y axis 
-    self.ax.set_xlabel("number of data points") # Set title of z axis 
-
-    self.ax.legend(["ax", "ay", "az"], loc ="upper right")
+    self.axes.set_ylim(self.ylim) # Set Y axis limit of plot
+    self.axes.set_title(f'Linear Acceleration {g.coordList[g.coordNum]} Data') # Set title of figure
+    self.axes.set_ylabel("linear acceleration in m/s^2") # Set title of y axis 
+    self.axes.set_xlabel("number of data points") # Set title of z axis 
+    self.axes.legend(["unfiltered", "filtered"], loc ="upper right")
 
     self.fig.canvas.mpl_connect('close_event', self.onClose)
     self.anim = FuncAnimation(self.fig, self.animate, frames=100, interval=50)

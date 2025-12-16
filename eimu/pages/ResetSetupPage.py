@@ -33,8 +33,8 @@ class ResetSetupFrame(tk.Frame):
     dialog = Messagebox.show_question(title="RESET WARNING!!!", message="This will reset all parameters on the controller's MEMORY to default.\nAre you sure you want to continue?")
 
     if dialog == "Yes":
-      isSuccessful = self.resetAllParams()
-      if isSuccessful:
+      success = self.resetAllParams()
+      if success:
         Messagebox.show_info("SUCCESS:\n\nParameters Reset was successful\nReset Controller and Restart Application", "SUCCESS")
       else:
         Messagebox.show_error("ERROR:\n\nSomething went wrong\nAttempt to reset was unsuccessful", "ERROR")
@@ -43,5 +43,5 @@ class ResetSetupFrame(tk.Frame):
       Messagebox.show_error("INFO:\n\nOperation Was Cancelled", "ERROR")
 
   def resetAllParams(self):
-    isSuccessful = g.eimu.resetAllParams()
-    return isSuccessful
+    success = g.eimu.resetAllParams()
+    return success
