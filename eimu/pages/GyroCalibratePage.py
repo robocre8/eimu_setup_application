@@ -18,7 +18,7 @@ class GyroCalibrateFrame(tb.Frame):
     # intialize parameter
     self.start_process = False
     self.loop_count = 0
-    self.no_of_samples = 1000
+    self.no_of_samples = 1500
 
     g.eimu.setWorldFrameId(1)
 
@@ -117,7 +117,7 @@ class GyroCalibrateFrame(tb.Frame):
 
         self.loop_count += 1
         percent = (self.loop_count*100)/self.no_of_samples
-        self.textVal.configure(text=f'{percent} %')
+        self.textVal.configure(text=f'{int(percent)} %')
         self.progressBar['value'] = percent
 
         if percent >= 100.0:
@@ -134,16 +134,20 @@ class GyroCalibrateFrame(tb.Frame):
 
   def plot_calibrated_data(self):
 
-    min_x = min(self.gyro_x)
-    max_x = max(self.gyro_x)
-    min_y = min(self.gyro_y)
-    max_y = max(self.gyro_y)
-    min_z = min(self.gyro_z)
-    max_z = max(self.gyro_z)
+    # min_x = min(self.gyro_x)
+    # max_x = max(self.gyro_x)
+    # min_y = min(self.gyro_y)
+    # max_y = max(self.gyro_y)
+    # min_z = min(self.gyro_z)
+    # max_z = max(self.gyro_z)
 
-    gx_offset = (max_x + min_x) / 2
-    gy_offset = (max_y + min_y) / 2
-    gz_offset = (max_z + min_z) / 2
+    # gx_offset = (max_x + min_x) / 2
+    # gy_offset = (max_y + min_y) / 2
+    # gz_offset = (max_z + min_z) / 2
+
+    gx_offset = self.average(self.gyro_x)
+    gy_offset = self.average(self.gyro_y)
+    gz_offset = self.average(self.gyro_z)
 
     g.eimu.writeGyroOffset(gx_offset, gy_offset, gz_offset)
 

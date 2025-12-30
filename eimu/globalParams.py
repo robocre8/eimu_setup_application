@@ -4,6 +4,8 @@ class g():
   eimu = None
   port = "None"
 
+  gravity = 9.80665
+
   i2cAddress = None
   filterGain = None
   frameId = None

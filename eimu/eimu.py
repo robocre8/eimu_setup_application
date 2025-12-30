@@ -44,6 +44,15 @@ SET_ACC_LPF_CUT_FREQ = 0x29
 GET_ACC_LPF_CUT_FREQ = 0x2A
 READ_LIN_ACC_RAW = 0x2B
 READ_LIN_ACC = 0x2C
+
+READ_ACC_BIAS_VECT = 0x2D
+WRITE_ACC_BIAS_VECT = 0x2E
+READ_ACC_SCALE_MAT0 = 0x2F
+WRITE_ACC_SCALE_MAT0 = 0x30
+READ_ACC_SCALE_MAT1 = 0x31
+WRITE_ACC_SCALE_MAT1 = 0x32
+READ_ACC_SCALE_MAT2 = 0x33
+WRITE_ACC_SCALE_MAT2 = 0x34
 #---------------------------------------------
 
 
@@ -295,15 +304,36 @@ class EIMU:
         success, ax, ay, az = self.read_data3(READ_ACC_RAW)
         return success, round(ax, 6), round(ay, 6), round(az, 6)
     
-    def readAccOffset(self):
-        success, ax, ay, az = self.read_data3(READ_ACC_OFF)
-        return success, round(ax, 6), round(ay, 6), round(az, 6)
-    
-    def writeAccOffset(self, ax, ay, az):
-        self.write_data3(WRITE_ACC_OFF, ax, ay, az)
-    
     def writeAccVariance(self, ax, ay, az):
         self.write_data3(WRITE_ACC_VAR, ax, ay, az)
+
+    def readAccBiasVect(self):
+        success, ax, ay, az = self.read_data3(READ_ACC_BIAS_VECT)
+        return success, round(ax, 6), round(ay, 6), round(az, 6)
+    
+    def writeAccBiasVect(self, ax, ay, az):
+        self.write_data3(WRITE_ACC_BIAS_VECT, ax, ay, az)
+    
+    def readAccScaleMatR0(self):
+        success, ax, ay, az = self.read_data3(READ_ACC_SCALE_MAT0)
+        return success, round(ax, 6), round(ay, 6), round(az, 6)
+    
+    def writeAccScaleMatR0(self, ax, ay, az):
+        self.write_data3(WRITE_ACC_SCALE_MAT0, ax, ay, az)
+
+    def readAccScaleMatR1(self):
+        success, ax, ay, az = self.read_data3(READ_ACC_SCALE_MAT1)
+        return success, round(ax, 6), round(ay, 6), round(az, 6)
+    
+    def writeAccScaleMatR1(self, ax, ay, az):
+        self.write_data3(WRITE_ACC_SCALE_MAT1, ax, ay, az)
+
+    def readAccScaleMatR2(self):
+        success, ax, ay, az = self.read_data3(READ_ACC_SCALE_MAT2)
+        return success, round(ax, 6), round(ay, 6), round(az, 6)
+    
+    def writeAccScaleMatR2(self, ax, ay, az):
+        self.write_data3(WRITE_ACC_SCALE_MAT2, ax, ay, az)
     
     def readGyroRaw(self):
         success, gx, gy, gz = self.read_data3(READ_GYRO_RAW)

@@ -32,16 +32,15 @@ class MainAppFrame(tb.Frame):
     buttonStyle = tb.Style()
     buttonStyleName = 'primary.Link.TButton'
     buttonStyle.configure(buttonStyleName, font=('Monospace',10, 'bold'))
-
     
-    self.button1 = tb.Button(self.sideNavFrame, text="MAG CALIBRATION", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button1, self.displayMagCalibratePage))
+    self.button1 = tb.Button(self.sideNavFrame, text="GYRO CALIBRATION", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button1, self.displayGyroCalibratePage))
     
-    self.button2 = tb.Button(self.sideNavFrame, text="GYRO CALIBRATION", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button2, self.displayGyroCalibratePage))
+    self.button2 = tb.Button(self.sideNavFrame, text="ACC CALIBRATION", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button2, self.displayAccCalibratePage))
     
-    self.button3 = tb.Button(self.sideNavFrame, text="ACC CALIBRATION", style=buttonStyleName,
-                             command= lambda: self.displayPage(self.button3, self.displayAccCalibratePage))
+    self.button3 = tb.Button(self.sideNavFrame, text="MAG CALIBRATION", style=buttonStyleName,
+                             command= lambda: self.displayPage(self.button3, self.displayMagCalibratePage))
     
     self.button4 = tb.Button(self.sideNavFrame, text="VIZUALIZE IMU DATA", style=buttonStyleName,
                              command= lambda: self.displayPage(self.button4, self.displayImuVisualizePage))
