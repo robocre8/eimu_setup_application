@@ -98,7 +98,7 @@ class GyroCalibrateFrame(tb.Frame):
     self.gyro_z = deque(maxlen=self.no_of_samples)
 
     percent = 0.0
-    self.textVal.configure(text=f'{percent} %')
+    self.textVal.configure(text=f'{int(percent)} %')
     self.progressBar['value'] = percent
 
   def read_data(self):
@@ -117,12 +117,12 @@ class GyroCalibrateFrame(tb.Frame):
 
         self.loop_count += 1
         percent = (self.loop_count*100)/self.no_of_samples
-        self.textVal.configure(text=f'{percent} %')
+        self.textVal.configure(text=f'{int(percent)} %')
         self.progressBar['value'] = percent
 
-        if percent >= 100.0:
+        if self.loop_count >= self.no_of_samples:
           percent = 100.0
-          self.textVal.configure(text=f'{percent} %')
+          self.textVal.configure(text=f'{int(percent)} %')
           self.progressBar['value'] = percent
           self.plot_calibrated_data()
         else:

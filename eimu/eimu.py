@@ -63,7 +63,7 @@ class EIMU:
 
     #------------------------------------------------------------------------
     def send(self, cmd, arg1=0.0, arg2=0.0, arg3=0.0):
-        send_str = str(float(cmd))+" "+str(float(arg1))+" "+str(float(arg2))+" "+str(float(arg3))+"\r"
+        send_str = str(round(float(cmd),6))+" "+str(round(float(arg1),6))+" "+str(round(float(arg2),6))+" "+str(round(float(arg3),6))+"\r"
         self.ser.write(send_str.encode())
 
     def recv(self, cmd, arg1=0):
