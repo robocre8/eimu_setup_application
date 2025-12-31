@@ -70,7 +70,7 @@ class EIMU:
         try:
             self.send(cmd, arg1)
             data = self.ser.readline().decode().strip().split(' ')
-            return True, float(data[0]), float(data[1]), float(data[2])
+            return True, round(float(data[0]),6), round(float(data[1]),6), round(float(data[2]),6)
         except:
             # self.ser.reset_input_buffer()
             # self.ser.reset_output_buffer()
@@ -105,27 +105,27 @@ class EIMU:
     
     def readRPY(self):
         success, r, p, y = self.recv(READ_RPY)
-        return success, round(r, 6), round(p, 6), round(y, 6)
+        return success, r, p, y
     
     def readRPYVariance(self):
         success, r, p, y = self.recv(READ_RPY_VAR)
-        return success, round(r, 6), round(p, 6), round(y, 6)
+        return success, r, p, y
     
     def readLinearAcc(self):
         success, ax, ay, az = self.recv(READ_LIN_ACC)
-        return success, round(ax, 6), round(ay, 6), round(az, 6)
+        return success, ax, ay, az
     
     def readAccVariance(self):
         success, ax, ay, az = self.recv(READ_ACC_VAR)
-        return success, round(ax, 6), round(ay, 6), round(az, 6)
+        return success, ax, ay, az
     
     def readGyro(self):
         success, gx, gy, gz = self.recv(READ_GYRO)
-        return success, round(gx, 6), round(gy, 6), round(gz, 6)
+        return success, gx, gy, gz
     
     def readGyroVariance(self):
         success, gx, gy, gz = self.recv(READ_GYRO_VAR)
-        return success, round(gx, 6), round(gy, 6), round(gz, 6)
+        return success, gx, gy, gz
     
     #---------------------------------------------------------------------
 
@@ -155,23 +155,23 @@ class EIMU:
 
     def readAcc(self):
         success, ax, ay, az = self.recv(READ_ACC)
-        return success, round(ax, 6), round(ay, 6), round(az, 6)
+        return success, ax, ay, az
     
     def readMag(self):
         success, mx, my, mz = self.recv(READ_MAG)
-        return success, round(mx, 6), round(my, 6), round(mz, 6)
+        return success, mx, my, mz
     
     def readLinearAccRaw(self):
         success, ax, ay, az = self.recv(READ_LIN_ACC_RAW)
-        return success, round(ax, 6), round(ay, 6), round(az, 6)
+        return success, ax, ay, az
     
     def readAccRaw(self):
         success, ax, ay, az = self.recv(READ_ACC_RAW)
-        return success, round(ax, 6), round(ay, 6), round(az, 6)
+        return success, ax, ay, az
     
     def readAccOffset(self):
         success, ax, ay, az = self.recv(READ_ACC_OFF)
-        return success, round(ax, 6), round(ay, 6), round(az, 6)
+        return success, ax, ay, az
     
     def writeAccOffset(self, ax, ay, az):
         self.send(WRITE_ACC_OFF, ax, ay, az)
@@ -181,11 +181,11 @@ class EIMU:
     
     def readGyroRaw(self):
         success, gx, gy, gz = self.recv(READ_GYRO_RAW)
-        return success, round(gx, 6), round(gy, 6), round(gz, 6)
+        return success, gx, gy, gz
     
     def readGyroOffset(self):
         success, gx, gy, gz = self.recv(READ_GYRO_OFF)
-        return success, round(gx, 6), round(gy, 6), round(gz, 6)
+        return success, gx, gy, gz
     
     def writeGyroOffset(self, gx, gy, gz):
         self.send(WRITE_GYRO_OFF, gx, gy, gz)
@@ -195,32 +195,32 @@ class EIMU:
     
     def readMagRaw(self):
         success, mx, my, mz = self.recv(READ_MAG_RAW)
-        return success, round(mx, 6), round(my, 6), round(mz, 6)
+        return success, mx, my, mz
     
     def readMagHardOffset(self):
         success, mx, my, mz = self.recv(READ_MAG_H_OFF)
-        return success, round(mx, 6), round(my, 6), round(mz, 6)
+        return success, mx, my, mz
     
     def writeMagHardOffset(self, mx, my, mz):
         self.send(WRITE_MAG_H_OFF, mx, my, mz)
     
     def readMagSoftOffset0(self):
         success, mx, my, mz = self.recv(READ_MAG_S_OFF0)
-        return success, round(mx, 6), round(my, 6), round(mz, 6)
+        return success, mx, my, mz
     
     def writeMagSoftOffset0(self, mx, my, mz):
         self.send(WRITE_MAG_S_OFF0, mx, my, mz)
     
     def readMagSoftOffset1(self):
         success, mx, my, mz = self.recv(READ_MAG_S_OFF1)
-        return success, round(mx, 6), round(my, 6), round(mz, 6)
+        return success, mx, my, mz
     
     def writeMagSoftOffset1(self, mx, my, mz):
         self.send(WRITE_MAG_S_OFF1, mx, my, mz)
     
     def readMagSoftOffset2(self):
         success, mx, my, mz = self.recv(READ_MAG_S_OFF2)
-        return success, round(mx, 6), round(my, 6), round(mz, 6)
+        return success, mx, my, mz
     
     def writeMagSoftOffset2(self, mx, my, mz):
         self.send(WRITE_MAG_S_OFF2, mx, my, mz)
