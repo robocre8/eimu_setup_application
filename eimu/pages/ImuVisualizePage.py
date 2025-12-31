@@ -75,7 +75,10 @@ class ImuVisualizeFrame(tb.Frame):
     self.gyValFrame = tb.Frame(self.angularVelValFrame)
     self.gzValFrame = tb.Frame(self.angularVelValFrame)
 
-    success, r, p, y, ax, ay, az, gx, gy, gz = g.eimu.readImuData()
+    success, r, p, y = g.eimu.readRPY()
+    success, ax, ay, az = g.eimu.readLinearAcc()
+    success, gx, gy, gz = g.eimu.readGyro()
+
     if not success:
       print("Error Occured while reading Initial Imu Data")
 
@@ -201,7 +204,9 @@ class ImuVisualizeFrame(tb.Frame):
 
   def animate(self,i):
 
-      success, r, p, y, ax, ay, az, gx, gy, gz = g.eimu.readImuData()
+      success, r, p, y = g.eimu.readRPY()
+      success, ax, ay, az = g.eimu.readLinearAcc()
+      success, gx, gy, gz = g.eimu.readGyro()
       
       if success:
         self.rVal.configure(text=f"{r}")
