@@ -94,9 +94,15 @@ this is the source code of the Easy IMU GUI application. The application require
   > ```
 
 - activate the virtual environment
+  >[!NOTE]
+  > you may need to run this command first in the powersheel:
+  >```
+  > Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted -Force
+  >```
+
   > ```shell
+  > .\.env\Scripts\Activate.ps1 # In Powershel (or VS Code)
   > .\.env\Scripts\activate.bat # In CMD
-  > .\.env\Scripts\Activate.ps1 # In Powershel
   > ```
 
 - you should see now that you are in the **`.env`** virtual environment
@@ -155,9 +161,15 @@ this is the source code of the Easy IMU GUI application. The application require
   > ```
 
 - activate the virtual environment
+  >[!NOTE]
+  > you may need to run this command first in the powersheel:
+  >```
+  > Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted -Force
+  >```
+
   > ```shell
+  > .\.env\Scripts\Activate.ps1 # In Powershel (or VS Code)
   > .\.env\Scripts\activate.bat # In CMD
-  > .\.env\Scripts\Activate.ps1 # In Powershel
   > ```
 
 - you should see now that you are in the **`.env`** virtual environment
