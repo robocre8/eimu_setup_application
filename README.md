@@ -1,5 +1,5 @@
 ## The Easy IMU (eimu) Setup Application
-this is the source code of the Easy IMU GUI application. The application requires that you have the **`Easy IMU Module`** (i.e **`MPU9250 EIMU MODULE`**) and is connected to your PC via USB serial communication. 
+this is the source code of the Easy IMU GUI application. The application requires that you have the **`Easy IMU Module`** and is connected to your PC via USB serial communication. 
 
 ![eimu_app_pic](https://github.com/user-attachments/assets/49298cc7-6ff2-4856-9e1e-e013d26c66fd)
 
