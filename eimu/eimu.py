@@ -77,6 +77,8 @@ class EIMU:
             return False, 0.0, 0.0, 0.0
     
     #---------------------------------------------------------------------
+    #          BASIC COMMANDS
+    #---------------------------------------------------------------------
         
     def clearDataBuffer(self):
         success, _, _, _ = self.recv(CLEAR)
@@ -127,6 +129,8 @@ class EIMU:
         success, gx, gy, gz = self.recv(READ_GYRO_VAR)
         return success, gx, gy, gz
     
+    #---------------------------------------------------------------------
+    #          ADVANCED COMMANDS (USE WITH CAUTION)
     #---------------------------------------------------------------------
 
     def setI2cAddress(self, i2cAddress):
