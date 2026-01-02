@@ -143,16 +143,6 @@ class EIMU:
     def resetAllParams(self):
         success, _, _, _ = self.recv(RESET)
         return success
-
-    def setFilterGain(self, gain):
-        self.send(SET_FILTER_GAIN, 0.0, gain)
-    
-    def setAccFilterCF(self, cf):
-        self.send(SET_ACC_LPF_CUT_FREQ, 0.0, cf)
-    
-    def getAccFilterCF(self):
-        success, cf, _, _ = self.recv(GET_ACC_LPF_CUT_FREQ)
-        return success, round(cf, 3)
     
     def writeRPYVariance(self, r, p, y):
         self.send(WRITE_RPY_VAR, r, p, y)
