@@ -98,7 +98,7 @@ class GyroCalibrateFrame(tb.Frame):
     self.gyro_z = deque(maxlen=self.no_of_samples)
 
     percent = 0.0
-    self.textVal.configure(text=f'{percent} %')
+    self.textVal.configure(text=f'{int(percent)} %')
     self.progressBar['value'] = percent
 
   def read_data(self):
@@ -117,12 +117,12 @@ class GyroCalibrateFrame(tb.Frame):
 
         self.loop_count += 1
         percent = (self.loop_count*100)/self.no_of_samples
-        self.textVal.configure(text=f'{percent} %')
+        self.textVal.configure(text=f'{int(percent)} %')
         self.progressBar['value'] = percent
 
-        if percent >= 100.0:
+        if self.loop_count >= self.no_of_samples:
           percent = 100.0
-          self.textVal.configure(text=f'{percent} %')
+          self.textVal.configure(text=f'{int(percent)} %')
           self.progressBar['value'] = percent
           self.plot_calibrated_data()
         else:
@@ -134,20 +134,14 @@ class GyroCalibrateFrame(tb.Frame):
 
   def plot_calibrated_data(self):
 
-    min_x = min(self.gyro_x)
-    max_x = max(self.gyro_x)
-    min_y = min(self.gyro_y)
-    max_y = max(self.gyro_y)
-    min_z = min(self.gyro_z)
-    max_z = max(self.gyro_z)
-
-    gx_offset = (max_x + min_x) / 2
-    gy_offset = (max_y + min_y) / 2
-    gz_offset = (max_z + min_z) / 2
+    gx_offset = self.average(self.gyro_x)
+    gy_offset = self.average(self.gyro_y)
+    gz_offset = self.average(self.gyro_z)
 
     g.eimu.writeGyroOffset(gx_offset, gy_offset, gz_offset)
 
     success, gx_offset, gy_offset, gz_offset = g.eimu.readGyroOffset()
+
     if not success:
       print("Error Occured while reading Final Gyro Offset Values")
 
@@ -155,7 +149,7 @@ class GyroCalibrateFrame(tb.Frame):
     self.gyVal.configure(text=f'{gy_offset}')
     self.gzVal.configure(text=f'{gz_offset}')
 
-    gyro_calibration = [ gx_offset, gy_offset, gz_offset]
+    gyro_calibration = [ gx_offset, gy_offset, gz_offset ]
 
     print(colored("\ngyro offsets in rad/s:", 'green'))
     print(gyro_calibration)

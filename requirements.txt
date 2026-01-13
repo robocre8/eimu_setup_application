@@ -1,7 +1,7 @@
-pyserial
-ttkbootstrap
+pyserial==3.5
+ttkbootstrap==1.14.2
+pyinstaller==6.15.0
+termcolor==3.1.0
 numpy
 matplotlib
 scipy
-termcolor
-pyinstaller
