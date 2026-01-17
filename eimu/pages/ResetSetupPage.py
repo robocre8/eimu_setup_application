@@ -43,5 +43,5 @@ class ResetSetupFrame(tk.Frame):
       Messagebox.show_error("INFO:\n\nOperation Was Cancelled", "ERROR")
 
   def resetAllParams(self):
-    success = g.eimu.resetAllParams()
+    success = g.imu.resetAllParams()
     return success

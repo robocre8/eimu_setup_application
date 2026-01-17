@@ -20,7 +20,7 @@ class GyroCalibrateFrame(tb.Frame):
     self.loop_count = 0
     self.no_of_samples = 1000
 
-    g.eimu.setWorldFrameId(1)
+    g.imu.setWorldFrameId(1)
 
     self.gyro_x = deque(maxlen=self.no_of_samples)
     self.gyro_y = deque(maxlen=self.no_of_samples)
@@ -32,7 +32,7 @@ class GyroCalibrateFrame(tb.Frame):
     self.gyValFrame = tb.Frame(self)
     self.gzValFrame = tb.Frame(self)
 
-    success, gx, gy, gz = g.eimu.readGyroOffset()
+    success, gx, gy, gz = g.imu.readGyroOffset()
     if not success:
       print("Error Occured while reading Initial Gyro Offset Values")
 
@@ -108,7 +108,7 @@ class GyroCalibrateFrame(tb.Frame):
       self.gyVal.configure(text="0.0")
       self.gzVal.configure(text="0.0")
 
-      success, gx, gy, gz = g.eimu.readGyroRaw()
+      success, gx, gy, gz = g.imu.readGyroRaw()
 
       if success:
         self.gyro_x.append(gx)
@@ -138,9 +138,9 @@ class GyroCalibrateFrame(tb.Frame):
     gy_offset = self.average(self.gyro_y)
     gz_offset = self.average(self.gyro_z)
 
-    g.eimu.writeGyroOffset(gx_offset, gy_offset, gz_offset)
+    g.imu.writeGyroOffset(gx_offset, gy_offset, gz_offset)
 
-    success, gx_offset, gy_offset, gz_offset = g.eimu.readGyroOffset()
+    success, gx_offset, gy_offset, gz_offset = g.imu.readGyroOffset()
 
     if not success:
       print("Error Occured while reading Final Gyro Offset Values")

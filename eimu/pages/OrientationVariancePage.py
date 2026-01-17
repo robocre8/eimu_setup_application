@@ -17,7 +17,7 @@ class OrientationVarianceFrame(tb.Frame):
     self.loop_count = 0
     self.no_of_samples = 1000
 
-    g.eimu.setWorldFrameId(1)
+    g.imu.setWorldFrameId(1)
 
     self.r_arr = []
     self.p_arr = []
@@ -29,7 +29,7 @@ class OrientationVarianceFrame(tb.Frame):
     self.pValFrame = tb.Frame(self)
     self.yValFrame = tb.Frame(self)
 
-    success, r, p, y = g.eimu.readRPYVariance()
+    success, r, p, y = g.imu.readRPYVariance()
     if not success:
       print("Error Occured While Reading Initial Orientation Variance Values")
 
@@ -104,7 +104,7 @@ class OrientationVarianceFrame(tb.Frame):
       self.pVal.configure(text="0.0")
       self.yVal.configure(text="0.0")
 
-      success, r, p, y = g.eimu.readRPY()
+      success, r, p, y = g.imu.readRPY()
       if success:
         self.r_arr.append(r)
         self.p_arr.append(p)
@@ -133,9 +133,9 @@ class OrientationVarianceFrame(tb.Frame):
     p_variance = np.var(self.p_arr)
     y_variance = np.var(self.y_arr)
     
-    g.eimu.writeRPYVariance(r_variance, p_variance, y_variance)
+    g.imu.writeRPYVariance(r_variance, p_variance, y_variance)
 
-    success, r_variance, p_variance, y_variance = g.eimu.readRPYVariance()
+    success, r_variance, p_variance, y_variance = g.imu.readRPYVariance()
     if not success:
       print("Error Occured While Reading Final Orientation Variance Values")
 

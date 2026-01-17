@@ -30,7 +30,7 @@ class ImuVisualizeFrame(tb.Frame):
 
     self.sensor_axis_line_width = str(4.0)
 
-    g.eimu.setWorldFrameId(1)
+    g.imu.setWorldFrameId(1)
 
     # self.plot_elevation_angle = 60 
     # self.plot_horizontal_angle = 60
@@ -38,13 +38,13 @@ class ImuVisualizeFrame(tb.Frame):
     self.label = tb.Label(self, text="VIZUALIZE IMU DATA", font=('Monospace',16, 'bold') ,bootstyle="dark")
   
     #create widgets to be added to the Fame
-    success, frameId = g.eimu.getWorldFrameId()
+    success, frameId = g.imu.getWorldFrameId()
     if success:
       g.frameId = frameId
     self.selectFrameId = SelectValueFrame(self, keyTextInit=f"REFERENCE_FRAME: ", valTextInit=g.frameList[g.frameId],
                                           initialComboValues=g.frameList, middileware_func=self.selectFrameIdFunc )
     
-    success, filterGain = g.eimu.getFilterGain()
+    success, filterGain = g.imu.getFilterGain()
     if success:
       g.filterGain = filterGain
     self.setFilterGain = SetValueFrame(self, keyTextInit="FILTER_GAIN: ", valTextInit=g.filterGain,
@@ -75,7 +75,7 @@ class ImuVisualizeFrame(tb.Frame):
     self.gyValFrame = tb.Frame(self.angularVelValFrame)
     self.gzValFrame = tb.Frame(self.angularVelValFrame)
 
-    success, r, p, y, ax, ay, az, gx, gy, gz = g.eimu.readImuData()
+    success, r, p, y, ax, ay, az, gx, gy, gz = g.imu.readImuData()
     if not success:
       print("Error Occured while reading Initial Imu Data")
 
@@ -165,8 +165,8 @@ class ImuVisualizeFrame(tb.Frame):
 
   def setFilterGainFunc(self, text):
     if text:
-      g.eimu.setFilterGain(float(text))
-      success, filterGain = g.eimu.getFilterGain()
+      g.imu.setFilterGain(float(text))
+      success, filterGain = g.imu.getFilterGain()
       if success:
         g.filterGain = filterGain
   
@@ -177,18 +177,18 @@ class ImuVisualizeFrame(tb.Frame):
     if frame_val_str:
       
       if frame_val_str == g.frameList[0]:
-        success = g.eimu.clearDataBuffer()
-        g.eimu.setWorldFrameId(0)
+        success = g.imu.clearDataBuffer()
+        g.imu.setWorldFrameId(0)
         
       elif frame_val_str == g.frameList[1]:
-        success = g.eimu.clearDataBuffer()
-        g.eimu.setWorldFrameId(1)
+        success = g.imu.clearDataBuffer()
+        g.imu.setWorldFrameId(1)
       
       elif frame_val_str == g.frameList[2]:
-        success = g.eimu.clearDataBuffer()
-        g.eimu.setWorldFrameId(2)
+        success = g.imu.clearDataBuffer()
+        g.imu.setWorldFrameId(2)
 
-    success, frameId = g.eimu.getWorldFrameId()
+    success, frameId = g.imu.getWorldFrameId()
     if success:
       g.frameId = frameId
     return g.frameList[g.frameId]
@@ -201,7 +201,7 @@ class ImuVisualizeFrame(tb.Frame):
 
   def animate(self,i):
 
-      success, r, p, y, ax, ay, az, gx, gy, gz = g.eimu.readImuData()
+      success, r, p, y, ax, ay, az, gx, gy, gz = g.imu.readImuData()
       
       if success:
         self.rVal.configure(text=f"{r}")

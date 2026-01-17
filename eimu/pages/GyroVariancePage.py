@@ -17,7 +17,7 @@ class GyroVarianceFrame(tb.Frame):
     self.loop_count = 0
     self.no_of_samples = 1000
 
-    g.eimu.setWorldFrameId(1)
+    g.imu.setWorldFrameId(1)
 
     self.gyrox_arr = []
     self.gyroy_arr = []
@@ -29,7 +29,7 @@ class GyroVarianceFrame(tb.Frame):
     self.gyValFrame = tb.Frame(self)
     self.gzValFrame = tb.Frame(self)
 
-    success, gx, gy, gz = g.eimu.readGyroVariance()
+    success, gx, gy, gz = g.imu.readGyroVariance()
     if not success:
       print("Error Occured While Reading Initial Gyro Variance Values")
 
@@ -104,7 +104,7 @@ class GyroVarianceFrame(tb.Frame):
       self.gyVal.configure(text="0.0")
       self.gzVal.configure(text="0.0")
 
-      success, gyrox_cal, gyroy_cal, gyroz_cal = g.eimu.readGyro()
+      success, gyrox_cal, gyroy_cal, gyroz_cal = g.imu.readGyro()
       if success:
         self.gyrox_arr.append(gyrox_cal)
         self.gyroy_arr.append(gyroy_cal)
@@ -133,9 +133,9 @@ class GyroVarianceFrame(tb.Frame):
     gyroy_variance = np.var(self.gyroy_arr)
     gyroz_variance = np.var(self.gyroz_arr)
 
-    g.eimu.writeGyroVariance(gyrox_variance, gyroy_variance, gyroz_variance)
+    g.imu.writeGyroVariance(gyrox_variance, gyroy_variance, gyroz_variance)
 
-    success, gyrox_variance, gyroy_variance, gyroz_variance = g.eimu.readGyroVariance()
+    success, gyrox_variance, gyroy_variance, gyroz_variance = g.imu.readGyroVariance()
     if not success:
       print("Error Occured While Reading Final Gyro Variance Values")
 

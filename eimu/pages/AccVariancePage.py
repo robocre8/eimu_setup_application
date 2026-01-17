@@ -17,7 +17,7 @@ class AccVarianceFrame(tb.Frame):
     self.loop_count = 0
     self.no_of_samples = 1000
 
-    g.eimu.setWorldFrameId(1)
+    g.imu.setWorldFrameId(1)
 
     self.accx_arr = []
     self.accy_arr = []
@@ -29,7 +29,7 @@ class AccVarianceFrame(tb.Frame):
     self.ayValFrame = tb.Frame(self)
     self.azValFrame = tb.Frame(self)
 
-    success, ax, ay, az = g.eimu.readAccVariance()
+    success, ax, ay, az = g.imu.readAccVariance()
     if not success:
       print("Error Occured While Reading Initial Acc Variance Values")
 
@@ -104,7 +104,7 @@ class AccVarianceFrame(tb.Frame):
       self.ayVal.configure(text="0.0")
       self.azVal.configure(text="0.0")
 
-      success, accx_cal, accy_cal, accz_cal = g.eimu.readLinearAcc()
+      success, accx_cal, accy_cal, accz_cal = g.imu.readLinearAcc()
       if success:
         self.accx_arr.append(accx_cal)
         self.accy_arr.append(accy_cal)
@@ -133,9 +133,9 @@ class AccVarianceFrame(tb.Frame):
     accy_variance = np.var(self.accy_arr)
     accz_variance = np.var(self.accz_arr)
 
-    g.eimu.writeAccVariance(accx_variance, accy_variance, accz_variance)
+    g.imu.writeAccVariance(accx_variance, accy_variance, accz_variance)
 
-    success, accx_variance, accy_variance, accz_variance = g.eimu.readAccVariance()
+    success, accx_variance, accy_variance, accz_variance = g.imu.readAccVariance()
     if not success:
       print("Error Occured While Reading Final Acc Variance Values")
 
