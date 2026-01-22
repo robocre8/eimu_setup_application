@@ -70,10 +70,9 @@ class SerialConnectFrame(tb.Frame):
 
   def connectToPort(self, port):
     try:
-      # 100Hz comm setup
-      serial_port = g.port
+      serial_port = port
       serial_baudrate = 115200
-      serial_timeout = 0.1
+      serial_timeout = 0.05
 
       g.imu = EIMUSerialClient()
       g.imu.connect(serial_port, serial_baudrate, serial_timeout)
