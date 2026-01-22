@@ -31,7 +31,7 @@ class MagCalibrateFrame(tb.Frame):
     self.calibrated = False
     self.HISTORY_SIZE = 10000
 
-    g.eimu.setWorldFrameId(1)
+    g.imu.setWorldFrameId(1)
 
     self.fig, self.ax = None, None
     
@@ -72,22 +72,33 @@ class MagCalibrateFrame(tb.Frame):
     b_vect = np.zeros([3, 1])
     A_mat = np.eye(3)
     
-    g.eimu.writeMagHardOffset(self.b[0][0], self.b[1][0], self.b[2][0])
 
-    success, b_vect[0][0], b_vect[1][0], b_vect[2][0] = g.eimu.readMagHardOffset()
+    g.imu.writeMagHardOffset(self.b[0][0], self.b[1][0], self.b[2][0])
+
+    success, b_vect[0][0], b_vect[1][0], b_vect[2][0] = g.imu.readMagHardOffset()
     if not success:
       print("Error Occured while reading Mag Hard Iron Offset Values")
     
-    g.eimu.writeMagSoftOffset0(self.A_1[0][0], self.A_1[0][1], self.A_1[0][2])
-    g.eimu.writeMagSoftOffset1(self.A_1[1][0], self.A_1[1][1], self.A_1[1][2])
-    g.eimu.writeMagSoftOffset2(self.A_1[2][0], self.A_1[2][1], self.A_1[2][2])
 
-    success0, A_mat[0][0], A_mat[0][1], A_mat[0][2] = g.eimu.readMagSoftOffset0()
-    success1, A_mat[1][0], A_mat[1][1], A_mat[1][2] = g.eimu.readMagSoftOffset1()
-    success2, A_mat[2][0], A_mat[2][1], A_mat[2][2] = g.eimu.readMagSoftOffset2()
+    g.imu.writeMagSoftOffset0(self.A_1[0][0], self.A_1[0][1], self.A_1[0][2])
 
-    if not (success0 and success1 and success2):
-      print("Error Occured while reading Mag Soft Iron Offset Values")
+    success, A_mat[0][0], A_mat[0][1], A_mat[0][2] = g.imu.readMagSoftOffset0()
+    if not (success):
+      print("Error Occured while reading Mag Soft Iron Offset R0 Values")
+
+
+    g.imu.writeMagSoftOffset1(self.A_1[1][0], self.A_1[1][1], self.A_1[1][2])
+
+    success, A_mat[1][0], A_mat[1][1], A_mat[1][2] = g.imu.readMagSoftOffset1()
+    if not (success):
+      print("Error Occured while reading Mag Soft Iron Offset R1 Values")
+
+
+    g.imu.writeMagSoftOffset2(self.A_1[2][0], self.A_1[2][1], self.A_1[2][2])
+
+    success, A_mat[2][0], A_mat[2][1], A_mat[2][2] = g.imu.readMagSoftOffset2()
+    if not (success):
+      print("Error Occured while reading Mag Soft Iron Offset R2 Values")
     
 
     ################################################
@@ -169,17 +180,17 @@ class MagCalibrateFrame(tb.Frame):
   def onClick(self,event):   
     if self.stop == False:
       self.anim.event_source.stop()
-      if self.calibrated == False:
-        self.calibrate()
-        self.mag_x = []
-        self.mag_y = []
-        self.mag_z = []
-        self.magArray = []
-        self.calibrated = True
+      # if self.calibrated == False:
+      self.calibrate()
+      self.mag_x = []
+      self.mag_y = []
+      self.mag_z = []
+      self.magArray = []
+        # self.calibrated == True
       self.stop = True
-    else:
-      self.anim.event_source.start()
-      self.stop = False
+    # else:
+    #   self.anim.event_source.start()
+    #   self.stop = False
 
   def onClose(self,event): 
     plt.close()
@@ -201,10 +212,7 @@ class MagCalibrateFrame(tb.Frame):
 
       
   def animate(self,i):
-    if self.calibrated == False:
-      success, mx, my, mz = g.eimu.readMagRaw()
-    else:
-      success, mx, my, mz = g.eimu.readMag()
+    success, mx, my, mz = g.imu.readMagRaw()
     
     if success:
       self.magArray.append([mx,my,mz])
@@ -221,7 +229,16 @@ class MagCalibrateFrame(tb.Frame):
       self.ax.scatter(self.mag_z, self.mag_x, color='b')
       
     if len(self.mag_x) == self.HISTORY_SIZE:
+      print("History size is full")
       self.anim.event_source.stop()
+      # if self.calibrated == False:
+      self.calibrate()
+      self.mag_x = []
+      self.mag_y = []
+      self.mag_z = []
+      self.magArray = []
+        # self.calibrated == True
+      self.stop = True
     
 
   def runCalibration(self):

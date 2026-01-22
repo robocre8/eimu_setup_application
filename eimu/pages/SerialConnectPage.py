@@ -4,7 +4,7 @@ from ttkbootstrap.constants import *
 from ttkbootstrap.dialogs import Messagebox
 
 import serial.tools.list_ports
-from eimu.eimu import EIMU
+from eimu.eimu_serial import EIMUSerialClient
 
 import time
 
@@ -70,12 +70,16 @@ class SerialConnectFrame(tb.Frame):
 
   def connectToPort(self, port):
     try:
-      g.eimu = EIMU()
-      g.eimu.connect(port)
+      serial_port = port
+      serial_baudrate = 115200
+      serial_timeout = 0.05
+
+      g.imu = EIMUSerialClient()
+      g.imu.connect(serial_port, serial_baudrate, serial_timeout)
       time.sleep(4)
-      success = g.eimu.clearDataBuffer()
-      g.eimu.setWorldFrameId(1)
-      success, frame_id = g.eimu.getWorldFrameId()
+      success = g.imu.clearDataBuffer()
+      g.imu.setWorldFrameId(1)
+      success, frame_id = g.imu.getWorldFrameId()
       return True
     except:
       return False

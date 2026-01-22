@@ -16,7 +16,7 @@ class I2CSetupFrame(tb.Frame):
     self.frame = tb.Frame(self)
 
     #create widgets to be added to frame
-    success, address = g.eimu.getI2cAddress()
+    success, address = g.imu.getI2cAddress()
     if success:
       g.i2cAddress = address
     self.setI2Caddress = SetValueFrame(self.frame, keyTextInit="*I2C_ADDRESS: ", valTextInit=g.i2cAddress,
@@ -33,8 +33,8 @@ class I2CSetupFrame(tb.Frame):
 
   def setI2CaddressFunc(self, text):
     if text:
-      g.eimu.setI2cAddress(int(text))
-      success, address = g.eimu.getI2cAddress()
+      g.imu.setI2cAddress(int(text))
+      success, address = g.imu.getI2cAddress()
       if success:
         g.i2cAddress = address
   

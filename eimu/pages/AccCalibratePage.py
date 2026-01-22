@@ -20,7 +20,7 @@ class AccCalibrateFrame(tb.Frame):
     self.loop_count = 0
     self.no_of_samples = 1000
 
-    g.eimu.setWorldFrameId(1)
+    g.imu.setWorldFrameId(1)
 
     self.acc_x = deque(maxlen=self.no_of_samples)
     self.acc_y = deque(maxlen=self.no_of_samples)
@@ -32,7 +32,7 @@ class AccCalibrateFrame(tb.Frame):
     self.ayValFrame = tb.Frame(self)
     self.azValFrame = tb.Frame(self)
 
-    success, ax, ay, az = g.eimu.readAccOffset()
+    success, ax, ay, az = g.imu.readAccOffset()
     if not success:
       print("Error Occured While Reading Initial Acc Offset Values")
 
@@ -108,7 +108,7 @@ class AccCalibrateFrame(tb.Frame):
       self.ayVal.configure(text="0.0")
       self.azVal.configure(text="0.0")
 
-      success, ax, ay, az = g.eimu.readAccRaw()
+      success, ax, ay, az = g.imu.readAccRaw()
 
       if success:
         self.acc_x.append(ax)
@@ -137,9 +137,9 @@ class AccCalibrateFrame(tb.Frame):
     ay_offset = self.average(self.acc_y)
     az_offset = (self.average(self.acc_z) - 9.8)
 
-    g.eimu.writeAccOffset(ax_offset, ay_offset, az_offset)
+    g.imu.writeAccOffset(ax_offset, ay_offset, az_offset)
 
-    success, ax_offset, ay_offset, az_offset = g.eimu.readAccOffset()
+    success, ax_offset, ay_offset, az_offset = g.imu.readAccOffset()
 
     if not success:
       print("Error Occured While Reading Final Acc Offset Values")

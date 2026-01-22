@@ -25,7 +25,7 @@ class AccFilterFrame(tb.Frame):
 
     self.dataPoints = 50
     
-    g.eimu.setWorldFrameId(1)
+    g.imu.setWorldFrameId(1)
 
     self.label = tb.Label(self, text="FILTER ACC DATA", font=('Monospace',16, 'bold') ,bootstyle="dark")
 
@@ -33,7 +33,7 @@ class AccFilterFrame(tb.Frame):
     self.selectCoord = SelectValueFrame(self, keyTextInit=f"CO-ORDINATE: ", valTextInit=g.coordList[g.coordNum],
                                           initialComboValues=g.coordList, middileware_func=self.selectCoordFunc )
     
-    success, accFilterCF = g.eimu.getAccFilterCF()
+    success, accFilterCF = g.imu.getAccFilterCF()
     if success:
       g.accFilterCF = accFilterCF
     self.setAccFilterCFFrame = SetValueFrame(self, keyTextInit="ACC_LPF_CF: ", valTextInit=g.accFilterCF,
@@ -54,7 +54,7 @@ class AccFilterFrame(tb.Frame):
     self.ayValFrame = tb.Frame(self.accelerationValFrame)
     self.azValFrame = tb.Frame(self.accelerationValFrame)
 
-    success, ax, ay, az = g.eimu.readLinearAcc()
+    success, ax, ay, az = g.imu.readLinearAcc()
     if not success:
       print("Error Occured while reading Initial Linear Acceleration Data")
 
@@ -97,8 +97,8 @@ class AccFilterFrame(tb.Frame):
 
   def setAccFilterCFFunc(self, text):
     if text:
-      g.eimu.setAccFilterCF(float(text))
-      success, accFilterCF = g.eimu.getAccFilterCF()
+      g.imu.setAccFilterCF(float(text))
+      success, accFilterCF = g.imu.getAccFilterCF()
       if success:
         g.accFilterCF = accFilterCF
   
@@ -125,8 +125,8 @@ class AccFilterFrame(tb.Frame):
 
   def animate(self,i):
 
-    success0, ax_raw, ay_raw, az_raw = g.eimu.readLinearAccRaw()
-    success1, ax, ay, az = g.eimu.readLinearAcc()
+    success0, ax_raw, ay_raw, az_raw = g.imu.readLinearAccRaw()
+    success1, ax, ay, az = g.imu.readLinearAcc()
 
     if success0 and success1:
 
