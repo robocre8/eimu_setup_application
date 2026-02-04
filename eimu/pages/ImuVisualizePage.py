@@ -10,6 +10,11 @@ from eimu.globalParams import g
 from eimu.components.SetValueFrame import SetValueFrame
 from eimu.components.SelectValueFrame import SelectValueFrame
 
+from math import pi
+
+toRad = 2 * pi / 360
+toDeg = 1 / toRad
+
 
 
 class ImuVisualizeFrame(tb.Frame):
@@ -204,9 +209,9 @@ class ImuVisualizeFrame(tb.Frame):
       success, r, p, y, ax, ay, az, gx, gy, gz = g.imu.readImuData()
       
       if success:
-        self.rVal.configure(text=f"{r}")
-        self.pVal.configure(text=f"{p}")
-        self.yVal.configure(text=f"{y}")
+        self.rVal.configure(text=f"{round(r*toDeg,2)}")
+        self.pVal.configure(text=f"{round(p*toDeg,2)}")
+        self.yVal.configure(text=f"{round(y*toDeg,2)}")
         
         self.axVal.configure(text=f"{ax}")
         self.ayVal.configure(text=f"{ay}")
