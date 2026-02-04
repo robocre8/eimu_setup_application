@@ -1,7 +1,6 @@
 import serial
 import struct
 from typing import Tuple
-from enum import Enum
 from time import sleep
 
 # class EIMUSerialError(Exception):
