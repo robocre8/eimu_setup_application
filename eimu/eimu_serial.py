@@ -1,6 +1,8 @@
 import serial
 import struct
 from typing import Tuple
+from enum import Enum
+from time import sleep
 
 # class EIMUSerialError(Exception):
 #     """Custom exception for for EIMU Comm failure"""
@@ -59,6 +61,17 @@ class EIMUSerialClient:
 
     def connect(self, port: str, baud: int = 115200, timeout: float = 0.1):
         self.ser = serial.Serial(port, baud, timeout=timeout)
+        sleep(3.0)
+
+        for _ in range(10):
+            success, id = self.getWorldFrameId()
+            if success:
+                print("EIMU Connected Successfully")
+                return
+            sleep(0.1)
+
+        self.disconnect()
+        raise RuntimeError("EIMU could not connect, Please check connection and Try Again")
 
     def disconnect(self):
         if self.ser and self.ser.is_open:
@@ -73,7 +86,7 @@ class EIMUSerialClient:
             return
         try:
             self.ser.reset_input_buffer()
-        except Exception:
+        except serial.SerialException:
             pass
 
 
@@ -83,8 +96,9 @@ class EIMUSerialClient:
             return
         try:
             self.ser.reset_output_buffer()
-        except Exception:
+        except serial.SerialException:
             pass
+
 
     def _send_packet(self, cmd: int, payload: bytes = b""):
         if self.ser is None:
@@ -97,13 +111,26 @@ class EIMUSerialClient:
         self.ser.write(packet)
         self.ser.flush()
 
+    
     def _read_floats(self, count: int) -> Tuple[bool, tuple]:
         if self.ser is None:
             raise RuntimeError("Serial port is not connected")
-        payload = self.ser.read(4 * count)
-        if len(payload) != 4 * count:
+
+        try:
+            payload = self.ser.read(4 * count)
+
+            if len(payload) != 4 * count:
+                # partial frame → stream is now misaligned
+                self._flush_rx()
+                return False, tuple([0.0] * count)
+
+        except (serial.SerialTimeoutException,
+                serial.SerialException,
+                Exception):
+            # Any read-related failure → resync stream
             self._flush_rx()
             return False, tuple([0.0] * count)
+        
         return True, struct.unpack("<" + "f" * count, payload)
     
     # ------------------ Generic Data ------------------

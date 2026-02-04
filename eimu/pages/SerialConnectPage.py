@@ -76,10 +76,8 @@ class SerialConnectFrame(tb.Frame):
 
       g.imu = EIMUSerialClient()
       g.imu.connect(serial_port, serial_baudrate, serial_timeout)
-      time.sleep(4)
       success = g.imu.clearDataBuffer()
       g.imu.setWorldFrameId(1)
-      success, frame_id = g.imu.getWorldFrameId()
       return True
     except:
       return False

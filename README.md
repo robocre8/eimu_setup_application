@@ -20,7 +20,9 @@ this is the source code of the Easy IMU GUI application. The application require
 - install python virtual environment
   > ```shell
   > sudo apt install python3-pip   # linux or mac users
-  > sudo apt install python3-venv   # linux or mac users
+  > ```
+  > ```shell
+  > sudo apt install python3-virtualenv   # linux or mac users
   > ```
   > *OR*
   > ```shell
@@ -67,6 +69,15 @@ this is the source code of the Easy IMU GUI application. The application require
   > ```
 
 - Now follow this tutorial on [how to calibrate and setup the **Easy IMU Module**](https://robocre8.gitbook.io/robocre8/eimu-tutorials/how-to-calibrate-and-setup-the-eimu)
+
+- build the application with pyinstaller (optional):
+  > ```shell
+  > pyinstaller app.py --onefile --name eimu_app_ubuntu_<OS-version-number> --hidden-import='PIL._tkinter_finder'
+  > ```
+  > OR
+  > ```shell
+  > pyinstaller app.py --onefile --name eimu_app_mac_<OS-version-number> --hidden-import='PIL._tkinter_finder'
+  > ```
   
 - once you are done using the application, just close and dectivate the environment
   ```shell
@@ -95,8 +106,10 @@ this is the source code of the Easy IMU GUI application. The application require
 
 - activate the virtual environment
   > ```shell
-  > .\.env\Scripts\activate.bat # In CMD
   > .\.env\Scripts\Activate.ps1 # In Powershel
+  > ```
+  > ```shell
+  > .\.env\Scripts\activate.bat # In CMD
   > ```
 
 - you should see now that you are in the **`.env`** virtual environment
@@ -112,116 +125,13 @@ this is the source code of the Easy IMU GUI application. The application require
   > ```
 
 - Now follow this tutorial on [how to calibrate and setup the **Easy IMU Module**](https://robocre8.gitbook.io/robocre8/eimu-tutorials/how-to-calibrate-and-setup-the-eimu)
-  
-- once you are done using the application, just close and dectivate the environment
-  > ```shell
-  > deactivate
-  > ```
-  
-#
 
-#### Run App - Not As First Time [ Ubuntu or Mac Users ]
-- change directory into the root **`eimu_setup_application`** folder
-  > ```shell
-  > cd eimu_setup_application/
-  > ```
-
-- activate the virtual environment
-  > ```shell
-  > source .env/bin/activate
-  > ```
-
-- you should see now that you are in the **`.env`** virtual environment
-
-- now you can run the app in the virtual environment
-  > ```shell
-  > python3 app.py
-  > ```
-
-- Now follow this tutorial on [how to calibrate and setup the **Easy IMU Module**](https://robocre8.gitbook.io/robocre8/eimu-tutorials/how-to-calibrate-and-setup-the-eimu)
-  
-- once you are done using the application, just close and dectivate the environment
-  ```shell
-    deactivate
-  ```
-
-#
-
-#### Run App - Not As First Time [ Windows ]
-
-- change directory into the root **`eimu_setup_application`** folder
-  > ```shell
-  > cd .\eimu_setup_application\
-  > ```
-
-- activate the virtual environment
-  > ```shell
-  > .\.env\Scripts\activate.bat # In CMD
-  > .\.env\Scripts\Activate.ps1 # In Powershel
-  > ```
-
-- you should see now that you are in the **`.env`** virtual environment
-
-- now you can run the app in the virtual environment
-  > ```shell
-  > python app.py
-  > ```
-
-- Now follow this tutorial on [how to calibrate and setup the **Easy IMU Module**](https://robocre8.gitbook.io/robocre8/eimu-tutorials/how-to-calibrate-and-setup-the-eimu)
-  
-- once you are done using the application, just close and dectivate the environment
-  > ```shell
-  > deactivate
-  > ```
-
-#
-
-#### Build eimu_app with pyinstaller [Linux or Mac]
-
-- change directory into the root **`eimu_setup_application`** folder
-  > ```shell
-  > cd eimu_setup_application/
-  > ```
-
-- activate the virtual environment
-  > ```shell
-  > source .env/bin/activate
-  > ```
-
-- you should see now that you are in the **`.env`** virtual environment
-
-- build the application with pyinstaller:
-  > ```shell
-  > pyinstaller app.py --onefile --name eimu_app_ubuntu_<OS-version-number> --hidden-import='PIL._tkinter_finder'
-  > ```
-  > OR
-  > ```shell
-  > pyinstaller app.py --onefile --name eimu_app_mac_<OS-version-number> --hidden-import='PIL._tkinter_finder'
-  > ```
-
-#
-
-#### Build eimu_app with pyinstaller [Windows]
-
-- change directory into the root **`eimu_setup_application`** folder
-  > ```shell
-  > cd .\eimu_setup_application\
-  > ```
-
-- activate the virtual environment
-  > ```shell
-  > .\.env\Scripts\activate.bat # In CMD
-  > .\.env\Scripts\Activate.ps1 # In Powershel
-  > ```
-
-- you should see now that you are in the **`.env`** virtual environment
-
-- build the application with pyinstaller:
+- build the application with pyinstaller (optional):
   > ```shell
   > pyinstaller app.py --onefile --name eimu_app_windows_<OS-version-number> --hidden-import='PIL._tkinter_finder'
   > ```
   
-- once you are done, close and dectivate the environment
+- once you are done using the application, just close and dectivate the environment
   > ```shell
   > deactivate
   > ```
