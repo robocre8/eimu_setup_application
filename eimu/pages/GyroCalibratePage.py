@@ -32,9 +32,12 @@ class GyroCalibrateFrame(tb.Frame):
     self.gyValFrame = tb.Frame(self)
     self.gzValFrame = tb.Frame(self)
 
-    success, gx, gy, gz = g.imu.readGyroOffset()
-    if not success:
-      print("Error Occured while reading Initial Gyro Offset Values")
+    gx=0.0; gy=0.0; gz=0.0
+    success, buffer = g.imu.readGyroOffset()
+    if success:
+      gx = buffer[0]
+      gy = buffer[1]
+      gz = buffer[2]
 
     self.gxText = tb.Label(self.gxValFrame, text="GX-OFFSET:", font=('Monospace',10, 'bold') ,bootstyle="danger")
     self.gxVal = tb.Label(self.gxValFrame, text=f'{gx}', font=('Monospace',10), bootstyle="dark")
@@ -108,9 +111,12 @@ class GyroCalibrateFrame(tb.Frame):
       self.gyVal.configure(text="0.0")
       self.gzVal.configure(text="0.0")
 
-      success, gx, gy, gz = g.imu.readGyroRaw()
-
+      success, buffer = g.imu.readGyroRaw()
       if success:
+        gx = buffer[0]
+        gy = buffer[1]
+        gz = buffer[2]
+
         self.gyro_x.append(gx)
         self.gyro_y.append(gy)
         self.gyro_z.append(gz)
@@ -140,10 +146,12 @@ class GyroCalibrateFrame(tb.Frame):
 
     g.imu.writeGyroOffset(gx_offset, gy_offset, gz_offset)
 
-    success, gx_offset, gy_offset, gz_offset = g.imu.readGyroOffset()
+    success, buffer = g.imu.readGyroOffset()
 
-    if not success:
-      print("Error Occured while reading Final Gyro Offset Values")
+    if success:
+      gx_offset = buffer[0]
+      gy_offset = buffer[1]
+      gz_offset = buffer[2]
 
     self.gxVal.configure(text=f'{gx_offset}')
     self.gyVal.configure(text=f'{gy_offset}')

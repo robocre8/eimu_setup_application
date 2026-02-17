@@ -151,22 +151,26 @@ class EIMUSerialClient:
     def read_data3(self, cmd: int) -> Tuple[bool, float, float, float]:
         self._send_packet(cmd)
         success, vals = self._read_floats(3)
-        return success, *vals
+        return success, vals
+        # return success, *vals
 
     def read_data4(self, cmd: int) -> Tuple[bool, float, float, float, float]:
         self._send_packet(cmd)
         success, vals = self._read_floats(4)
-        return success, *vals
+        return success, vals
+        # return success, *vals
     
     def read_data6(self, cmd: int) -> Tuple[bool, float, float, float, float, float, float]:
         self._send_packet(cmd)
         success, vals = self._read_floats(6)
-        return success, *vals
+        return success, vals
+        # return success, *vals
     
     def read_data9(self, cmd: int) -> Tuple[bool, float, float, float, float, float, float, float, float, float]:
         self._send_packet(cmd)
         success, vals = self._read_floats(9)
-        return success, *vals
+        return success, vals
+        # return success, *vals
     
     #---------------------------------------------------------------------
         
@@ -186,52 +190,52 @@ class EIMUSerialClient:
         return success, round(gain, 3)
     
     def readQuat(self):
-        success, qw, qx, qy, qz = self.read_data4(READ_QUAT)
-        return success, round(qw, 6), round(qx, 6), round(qy, 6), round(qz, 6)
+        success, vals = self.read_data4(READ_QUAT)
+        return success, tuple(round(v, 6) for v in vals)
     
     def readRPY(self):
-        success, r, p, y = self.read_data3(READ_RPY)
-        return success, round(r, 6), round(p, 6), round(y, 6)
+        success, vals = self.read_data3(READ_RPY)
+        return success, tuple(round(v, 6) for v in vals)
     
     def readRPYVariance(self):
-        success, r, p, y = self.read_data3(READ_RPY_VAR)
-        return success, round(r, 6), round(p, 6), round(y, 6)
+        success, vals = self.read_data3(READ_RPY_VAR)
+        return success, tuple(round(v, 6) for v in vals)
     
     def readAcc(self):
-        success, ax, ay, az = self.read_data3(READ_ACC)
-        return success, round(ax, 6), round(ay, 6), round(az, 6)
+        success, vals = self.read_data3(READ_ACC)
+        return success, tuple(round(v, 6) for v in vals)
     
     def readAccVariance(self):
-        success, ax, ay, az = self.read_data3(READ_ACC_VAR)
-        return success, round(ax, 6), round(ay, 6), round(az, 6)
+        success, vals = self.read_data3(READ_ACC_VAR)
+        return success, tuple(round(v, 6) for v in vals)
     
     def readGyro(self):
-        success, gx, gy, gz = self.read_data3(READ_GYRO)
-        return success, round(gx, 6), round(gy, 6), round(gz, 6)
+        success, vals = self.read_data3(READ_GYRO)
+        return success, tuple(round(v, 6) for v in vals)
     
     def readGyroVariance(self):
-        success, gx, gy, gz = self.read_data3(READ_GYRO_VAR)
-        return success, round(gx, 6), round(gy, 6), round(gz, 6)
+        success, vals = self.read_data3(READ_GYRO_VAR)
+        return success, tuple(round(v, 6) for v in vals)
     
     def readMag(self):
-        success, mx, my, mz = self.read_data3(READ_MAG)
-        return success, round(mx, 6), round(my, 6), round(mz, 6)
+        success, vals = self.read_data3(READ_MAG)
+        return success, tuple(round(v, 6) for v in vals)
     
     def readAccGyro(self):
-        success, ax, ay, az, gx, gy, gz = self.read_data6(READ_ACC_GYRO)
-        return success, round(ax, 6), round(ay, 6), round(az, 6), round(gx, 6), round(gy, 6), round(gz, 6)
+        success, vals = self.read_data6(READ_ACC_GYRO)
+        return success, tuple(round(v, 6) for v in vals)
     
     def readImuData(self):
-        success, r, p, y, ax, ay, az, gx, gy, gz = self.read_data9(READ_IMU_DATA)
-        return success, round(r, 6), round(p, 6), round(y, 6), round(ax, 6), round(ay, 6), round(az, 6), round(gx, 6), round(gy, 6), round(gz, 6)
+        success, vals = self.read_data9(READ_IMU_DATA)
+        return success, tuple(round(v, 6) for v in vals)
 
     def readLinearAccRaw(self):
-        success, ax, ay, az = self.read_data3(READ_LIN_ACC_RAW)
-        return success, round(ax, 6), round(ay, 6), round(az, 6)
+        success, vals = self.read_data3(READ_LIN_ACC_RAW)
+        return success, tuple(round(v, 6) for v in vals)
     
     def readLinearAcc(self):
-        success, ax, ay, az = self.read_data3(READ_LIN_ACC)
-        return success, round(ax, 6), round(ay, 6), round(az, 6)
+        success, vals = self.read_data3(READ_LIN_ACC)
+        return success, tuple(round(v, 6) for v in vals)
     #---------------------------------------------------------------------
 
     def setI2cAddress(self, i2cAddress: int):
@@ -255,12 +259,12 @@ class EIMUSerialClient:
         self.write_data3(WRITE_RPY_VAR, r, p, y)
     
     def readAccRaw(self):
-        success, ax, ay, az = self.read_data3(READ_ACC_RAW)
-        return success, round(ax, 6), round(ay, 6), round(az, 6)
+        success, vals = self.read_data3(READ_ACC_RAW)
+        return success, tuple(round(v, 6) for v in vals)
     
     def readAccOffset(self):
-        success, ax, ay, az = self.read_data3(READ_ACC_OFF)
-        return success, round(ax, 6), round(ay, 6), round(az, 6)
+        success, vals = self.read_data3(READ_ACC_OFF)
+        return success, tuple(round(v, 6) for v in vals)
     
     def writeAccOffset(self, ax: float, ay: float, az: float):
         self.write_data3(WRITE_ACC_OFF, ax, ay, az)
@@ -269,12 +273,12 @@ class EIMUSerialClient:
         self.write_data3(WRITE_ACC_VAR, ax, ay, az)
     
     def readGyroRaw(self):
-        success, gx, gy, gz = self.read_data3(READ_GYRO_RAW)
-        return success, round(gx, 6), round(gy, 6), round(gz, 6)
+        success, vals = self.read_data3(READ_GYRO_RAW)
+        return success, tuple(round(v, 6) for v in vals)
     
     def readGyroOffset(self):
-        success, gx, gy, gz = self.read_data3(READ_GYRO_OFF)
-        return success, round(gx, 6), round(gy, 6), round(gz, 6)
+        success, vals = self.read_data3(READ_GYRO_OFF)
+        return success, tuple(round(v, 6) for v in vals)
     
     def writeGyroOffset(self, gx: float, gy: float, gz: float):
         self.write_data3(WRITE_GYRO_OFF, gx, gy, gz)
@@ -283,33 +287,33 @@ class EIMUSerialClient:
         self.write_data3(WRITE_GYRO_VAR, gx, gy, gz)
     
     def readMagRaw(self):
-        success, mx, my, mz = self.read_data3(READ_MAG_RAW)
-        return success, round(mx, 6), round(my, 6), round(mz, 6)
+        success, vals = self.read_data3(READ_MAG_RAW)
+        return success, tuple(round(v, 6) for v in vals)
     
     def readMagHardOffset(self):
-        success, mx, my, mz = self.read_data3(READ_MAG_H_OFF)
-        return success, round(mx, 6), round(my, 6), round(mz, 6)
+        success, vals = self.read_data3(READ_MAG_H_OFF)
+        return success, tuple(round(v, 6) for v in vals)
     
     def writeMagHardOffset(self, mx: float, my: float, mz: float):
         self.write_data3(WRITE_MAG_H_OFF, mx, my, mz)
     
     def readMagSoftOffset0(self):
-        success, mx, my, mz = self.read_data3(READ_MAG_S_OFF0)
-        return success, round(mx, 6), round(my, 6), round(mz, 6)
+        success, vals = self.read_data3(READ_MAG_S_OFF0)
+        return success, tuple(round(v, 6) for v in vals)
     
     def writeMagSoftOffset0(self, mx: float, my: float, mz: float):
         self.write_data3(WRITE_MAG_S_OFF0, mx, my, mz)
     
     def readMagSoftOffset1(self):
-        success, mx, my, mz = self.read_data3(READ_MAG_S_OFF1)
-        return success, round(mx, 6), round(my, 6), round(mz, 6)
+        success, vals = self.read_data3(READ_MAG_S_OFF1)
+        return success, tuple(round(v, 6) for v in vals)
     
     def writeMagSoftOffset1(self, mx: float, my: float, mz: float):
         self.write_data3(WRITE_MAG_S_OFF1, mx, my, mz)
     
     def readMagSoftOffset2(self):
-        success, mx, my, mz = self.read_data3(READ_MAG_S_OFF2)
-        return success, round(mx, 6), round(my, 6), round(mz, 6)
+        success, vals = self.read_data3(READ_MAG_S_OFF2)
+        return success, tuple(round(v, 6) for v in vals)
     
     def writeMagSoftOffset2(self, mx: float, my: float, mz: float):
         self.write_data3(WRITE_MAG_S_OFF2, mx, my, mz)

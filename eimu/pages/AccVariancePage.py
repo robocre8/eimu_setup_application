@@ -29,9 +29,12 @@ class AccVarianceFrame(tb.Frame):
     self.ayValFrame = tb.Frame(self)
     self.azValFrame = tb.Frame(self)
 
-    success, ax, ay, az = g.imu.readAccVariance()
-    if not success:
-      print("Error Occured While Reading Initial Acc Variance Values")
+    ax=0.0; ay=0.0; az=0.0
+    success, buffer = g.imu.readAccVariance()
+    if success:
+      ax = buffer[0]
+      ay = buffer[1]
+      az = buffer[2]
 
     self.axText = tb.Label(self.axValFrame, text="AX-VARIANCE:", font=('Monospace',10, 'bold') ,bootstyle="danger")
     self.axVal = tb.Label(self.axValFrame, text=f'{ax}', font=('Monospace',10), bootstyle="dark")
@@ -104,8 +107,12 @@ class AccVarianceFrame(tb.Frame):
       self.ayVal.configure(text="0.0")
       self.azVal.configure(text="0.0")
 
-      success, accx_cal, accy_cal, accz_cal = g.imu.readLinearAcc()
+      success, buffer = g.imu.readLinearAcc()
       if success:
+        accx_cal = buffer[0]
+        accy_cal = buffer[1]
+        accz_cal = buffer[2]
+
         self.accx_arr.append(accx_cal)
         self.accy_arr.append(accy_cal)
         self.accz_arr.append(accz_cal)
@@ -135,9 +142,11 @@ class AccVarianceFrame(tb.Frame):
 
     g.imu.writeAccVariance(accx_variance, accy_variance, accz_variance)
 
-    success, accx_variance, accy_variance, accz_variance = g.imu.readAccVariance()
-    if not success:
-      print("Error Occured While Reading Final Acc Variance Values")
+    success, buffer = g.imu.readAccVariance()
+    if success:
+      accx_variance = buffer[0]
+      accy_variance = buffer[1]
+      accz_variance = buffer[2]
 
     self.axVal.configure(text=f'{accx_variance}')
     self.ayVal.configure(text=f'{accy_variance}')
