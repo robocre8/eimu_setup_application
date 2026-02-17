@@ -80,18 +80,27 @@ class ImuVisualizeFrame(tb.Frame):
     self.gyValFrame = tb.Frame(self.angularVelValFrame)
     self.gzValFrame = tb.Frame(self.angularVelValFrame)
 
-    success, r, p, y, ax, ay, az, gx, gy, gz = g.imu.readImuData()
-    if not success:
-      print("Error Occured while reading Initial Imu Data")
+    r=0.0; p=0.0; y=0.0; ax=0.0; ay=0.0; az=0.0; gx=0.0; gy=0.0; gz=0.0
+    success, buffer = g.imu.readImuData()
+    if success:
+      r = buffer[0]
+      p = buffer[1]
+      y = buffer[2]
+      ax = buffer[3]
+      ay = buffer[4]
+      az = buffer[5]
+      gx = buffer[6]
+      gy = buffer[7]
+      gz = buffer[8]
 
     self.rText = tb.Label(self.rValFrame, text="R:", font=('Monospace',10, 'bold') ,bootstyle="danger")
-    self.rVal = tb.Label(self.rValFrame, text=f'{r}', font=('Monospace',10), bootstyle="dark")
+    self.rVal = tb.Label(self.rValFrame, text=f'{round(r*toDeg,2)}', font=('Monospace',10), bootstyle="dark")
 
     self.pText = tb.Label(self.pValFrame, text="P:", font=('Monospace',10, 'bold') ,bootstyle="success")
-    self.pVal = tb.Label(self.pValFrame, text=f'{p}', font=('Monospace',10), bootstyle="dark")
+    self.pVal = tb.Label(self.pValFrame, text=f'{round(p*toDeg,2)}', font=('Monospace',10), bootstyle="dark")
 
     self.yText = tb.Label(self.yValFrame, text="Y:", font=('Monospace',10, 'bold') ,bootstyle="primary")
-    self.yVal = tb.Label(self.yValFrame, text=f'{y}', font=('Monospace',10), bootstyle="dark")
+    self.yVal = tb.Label(self.yValFrame, text=f'{round(y*toDeg,2)}', font=('Monospace',10), bootstyle="dark")
 
 
     self.axText = tb.Label(self.axValFrame, text="AX:", font=('Monospace',10, 'bold') ,bootstyle="danger")
@@ -206,9 +215,19 @@ class ImuVisualizeFrame(tb.Frame):
 
   def animate(self,i):
 
-      success, r, p, y, ax, ay, az, gx, gy, gz = g.imu.readImuData()
+      success, buffer = g.imu.readImuData()
       
       if success:
+        r = buffer[0]
+        p = buffer[1]
+        y = buffer[2]
+        ax = buffer[3]
+        ay = buffer[4]
+        az = buffer[5]
+        gx = buffer[6]
+        gy = buffer[7]
+        gz = buffer[8]
+
         self.rVal.configure(text=f"{round(r*toDeg,2)}")
         self.pVal.configure(text=f"{round(p*toDeg,2)}")
         self.yVal.configure(text=f"{round(y*toDeg,2)}")

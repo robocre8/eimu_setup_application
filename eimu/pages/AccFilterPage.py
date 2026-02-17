@@ -54,9 +54,12 @@ class AccFilterFrame(tb.Frame):
     self.ayValFrame = tb.Frame(self.accelerationValFrame)
     self.azValFrame = tb.Frame(self.accelerationValFrame)
 
-    success, ax, ay, az = g.imu.readLinearAcc()
-    if not success:
-      print("Error Occured while reading Initial Linear Acceleration Data")
+    ax=0.0; ay=0.0; az=0.0
+    success, buffer = g.imu.readLinearAcc()
+    if success:
+      ax = buffer[0]
+      ay = buffer[1]
+      az = buffer[2]
 
     self.axText = tb.Label(self.axValFrame, text="AX:", font=('Monospace',10, 'bold') ,bootstyle="danger")
     self.axVal = tb.Label(self.axValFrame, text=f'{ax}', font=('Monospace',10), bootstyle="dark")
@@ -125,10 +128,18 @@ class AccFilterFrame(tb.Frame):
 
   def animate(self,i):
 
-    success0, ax_raw, ay_raw, az_raw = g.imu.readLinearAccRaw()
-    success1, ax, ay, az = g.imu.readLinearAcc()
+
+    success0, buffer0 = g.imu.readLinearAccRaw()
+    success1, buffer1 = g.imu.readLinearAcc()
 
     if success0 and success1:
+      ax_raw = buffer0[0]
+      ay_raw = buffer0[1]
+      az_raw = buffer0[2]
+
+      ax = buffer1[0]
+      ay = buffer1[1]
+      az = buffer1[2]
 
       self.axVal.configure(text=f"{ax}")
       self.ayVal.configure(text=f"{ay}")

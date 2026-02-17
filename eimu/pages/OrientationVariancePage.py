@@ -29,9 +29,12 @@ class OrientationVarianceFrame(tb.Frame):
     self.pValFrame = tb.Frame(self)
     self.yValFrame = tb.Frame(self)
 
-    success, r, p, y = g.imu.readRPYVariance()
-    if not success:
-      print("Error Occured While Reading Initial Orientation Variance Values")
+    r=0.0; p=0.0; y=0.0
+    success, buffer = g.imu.readRPYVariance()
+    if success:
+      r = buffer[0]
+      p = buffer[1]
+      y = buffer[2]
 
     self.rText = tb.Label(self.rValFrame, text="R-VARIANCE:", font=('Monospace',10, 'bold') ,bootstyle="danger")
     self.rVal = tb.Label(self.rValFrame, text=f'{r}', font=('Monospace',10), bootstyle="dark")
@@ -104,8 +107,12 @@ class OrientationVarianceFrame(tb.Frame):
       self.pVal.configure(text="0.0")
       self.yVal.configure(text="0.0")
 
-      success, r, p, y = g.imu.readRPY()
+      success, buffer = g.imu.readRPY()
       if success:
+        r = buffer[0]
+        p = buffer[1]
+        y = buffer[2]
+
         self.r_arr.append(r)
         self.p_arr.append(p)
         self.y_arr.append(y)
@@ -135,9 +142,11 @@ class OrientationVarianceFrame(tb.Frame):
     
     g.imu.writeRPYVariance(r_variance, p_variance, y_variance)
 
-    success, r_variance, p_variance, y_variance = g.imu.readRPYVariance()
-    if not success:
-      print("Error Occured While Reading Final Orientation Variance Values")
+    success, buffer = g.imu.readRPYVariance()
+    if success:
+      r_variance = buffer[0]
+      p_variance = buffer[1]
+      y_variance = buffer[2]
 
     self.rVal.configure(text=f'{r_variance}')
     self.pVal.configure(text=f'{p_variance}')

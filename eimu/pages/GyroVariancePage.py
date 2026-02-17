@@ -29,9 +29,12 @@ class GyroVarianceFrame(tb.Frame):
     self.gyValFrame = tb.Frame(self)
     self.gzValFrame = tb.Frame(self)
 
-    success, gx, gy, gz = g.imu.readGyroVariance()
-    if not success:
-      print("Error Occured While Reading Initial Gyro Variance Values")
+    gx=0.0; gy=0.0; gz=0.0
+    success, buffer = g.imu.readGyroVariance()
+    if success:
+      gx = buffer[0]
+      gy = buffer[1]
+      gz = buffer[2]
 
     self.gxText = tb.Label(self.gxValFrame, text="GX-VARIANCE:", font=('Monospace',10, 'bold') ,bootstyle="danger")
     self.gxVal = tb.Label(self.gxValFrame, text=f'{gx}', font=('Monospace',10), bootstyle="dark")
@@ -104,8 +107,12 @@ class GyroVarianceFrame(tb.Frame):
       self.gyVal.configure(text="0.0")
       self.gzVal.configure(text="0.0")
 
-      success, gyrox_cal, gyroy_cal, gyroz_cal = g.imu.readGyro()
+      success, buffer = g.imu.readGyro()
       if success:
+        gyrox_cal = buffer[0]
+        gyroy_cal = buffer[1]
+        gyroz_cal = buffer[2]
+        
         self.gyrox_arr.append(gyrox_cal)
         self.gyroy_arr.append(gyroy_cal)
         self.gyroz_arr.append(gyroz_cal)
@@ -135,9 +142,11 @@ class GyroVarianceFrame(tb.Frame):
 
     g.imu.writeGyroVariance(gyrox_variance, gyroy_variance, gyroz_variance)
 
-    success, gyrox_variance, gyroy_variance, gyroz_variance = g.imu.readGyroVariance()
-    if not success:
-      print("Error Occured While Reading Final Gyro Variance Values")
+    success, buffer = g.imu.readGyroVariance()
+    if success:
+      gyrox_variance = buffer[0]
+      gyroy_variance = buffer[1]
+      gyroz_variance = buffer[2]
 
     self.gxVal.configure(text=f'{gyrox_variance}')
     self.gyVal.configure(text=f'{gyroy_variance}')

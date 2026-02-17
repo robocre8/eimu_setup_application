@@ -32,9 +32,12 @@ class AccCalibrateFrame(tb.Frame):
     self.ayValFrame = tb.Frame(self)
     self.azValFrame = tb.Frame(self)
 
-    success, ax, ay, az = g.imu.readAccOffset()
-    if not success:
-      print("Error Occured While Reading Initial Acc Offset Values")
+    ax=0.0; ay=0.0; az=0.0
+    success, buffer = g.imu.readAccOffset()
+    if success:
+      ax = buffer[0]
+      ay = buffer[1]
+      az = buffer[2]
 
     self.axText = tb.Label(self.axValFrame, text="AX-OFFSET:", font=('Monospace',10, 'bold') ,bootstyle="danger")
     self.axVal = tb.Label(self.axValFrame, text=f'{ax}', font=('Monospace',10), bootstyle="dark")
@@ -108,9 +111,13 @@ class AccCalibrateFrame(tb.Frame):
       self.ayVal.configure(text="0.0")
       self.azVal.configure(text="0.0")
 
-      success, ax, ay, az = g.imu.readAccRaw()
+      success, buffer = g.imu.readAccRaw()
 
       if success:
+        ax = buffer[0]
+        ay = buffer[1]
+        az = buffer[2]
+
         self.acc_x.append(ax)
         self.acc_y.append(ay)
         self.acc_z.append(az)
@@ -139,10 +146,12 @@ class AccCalibrateFrame(tb.Frame):
 
     g.imu.writeAccOffset(ax_offset, ay_offset, az_offset)
 
-    success, ax_offset, ay_offset, az_offset = g.imu.readAccOffset()
+    success, buffer = g.imu.readAccOffset()
 
-    if not success:
-      print("Error Occured While Reading Final Acc Offset Values")
+    if success:
+      ax_offset = buffer[0]
+      ay_offset = buffer[1]
+      az_offset = buffer[2]
 
     self.axVal.configure(text=f'{ax_offset}')
     self.ayVal.configure(text=f'{ay_offset}')

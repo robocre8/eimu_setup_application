@@ -80,9 +80,15 @@ class MagViewCalibrationFrame(tb.Frame):
 
       
   def animate(self,i):
-    success, mx, my, mz = g.imu.readMag()
-    
+    if len(self.mag_x) == self.HISTORY_SIZE:
+      self.anim.event_source.stop()
+      
+    success, buffer = g.imu.readMag()
     if success:
+      mx = buffer[0]
+      my = buffer[1]
+      mz = buffer[2]
+
       self.magArray.append([mx,my,mz])
       self.mag_x.append(mx)
       self.mag_y.append(my)
@@ -95,9 +101,6 @@ class MagViewCalibrationFrame(tb.Frame):
       self.ax.scatter(self.mag_x, self.mag_y, color='r')
       self.ax.scatter(self.mag_y, self.mag_z, color='g')
       self.ax.scatter(self.mag_z, self.mag_x, color='b')
-      
-    if len(self.mag_x) == self.HISTORY_SIZE:
-      self.anim.event_source.stop()
     
 
   def runCalibration(self):
